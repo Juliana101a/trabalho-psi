@@ -1,0 +1,22 @@
+# Palavras que não entram na sigla
+palavras_ignorar = {"de", "do", "da", "e", "dos", "das", "em"}
+
+print("=== Gerador de Siglas ===")
+
+def gerar_sigla():
+    frase = input().lower()  # entrada direta
+    palavras = frase.split()
+
+    sigla = ""
+    for palavra in palavras:
+        if palavra not in palavras_ignorar:
+            sigla += palavra[0].upper()
+
+    print("Sigla:", sigla)  # apenas mostra "Sigla"
+
+while True:
+    gerar_sigla()
+    opcao = input("Outra? (s/n): ").lower()
+    if opcao != "s":
+        print("Fim do programa.")
+        break
