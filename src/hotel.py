@@ -7,52 +7,63 @@ hoteis = {}
 # CREATE
 def criar_hotel(nome, endereco, telefone, classificacao):
     id_hotel = gerar_id_hotel()
-    hoteis[id_hotel] = {
+
+    hotel = {
         "nome": nome,
         "endereco": endereco,
         "telefone": telefone,
         "classificacao": classificacao
     }
-    print(f"Hotel criado com sucesso. ID: {id_hotel}")
 
-# READ
+    hoteis[id_hotel] = hotel
+
+    return 201, {"id_hotel": id_hotel, **hotel}
+
+
+# READ (todos)
 def listar_hoteis():
-    if not hoteis:
-        print("Não existem hotéis registados.")
-        return
-    for id_h, dados in hoteis.items():
-        print(f"ID: {id_h} | Nome: {dados['nome']} | Endereço: {dados['endereco']} | Tel: {dados['telefone']} | Classificação: {dados['classificacao']}")
+    return 200, hoteis.copy()
 
+
+# READ (um hotel)
 def consultar_hotel(id_hotel):
     if id_hotel not in hoteis:
-        print("Hotel não encontrado.")
-        return
-    print(hoteis[id_hotel])
+        return 404, "Hotel não encontrado."
+
+    return 200, hoteis[id_hotel].copy()
+
 
 # UPDATE
 def atualizar_hotel(id_hotel, nome=None, endereco=None, telefone=None, classificacao=None):
     if id_hotel not in hoteis:
-        print("Hotel não encontrado.")
-        return
-    if nome:
+        return 404, "Hotel não encontrado."
+
+    if nome is not None:
         hoteis[id_hotel]["nome"] = nome
-    if endereco:
+
+    if endereco is not None:
         hoteis[id_hotel]["endereco"] = endereco
-    if telefone:
+
+    if telefone is not None:
         hoteis[id_hotel]["telefone"] = telefone
-    if classificacao:
+
+    if classificacao is not None:
         hoteis[id_hotel]["classificacao"] = classificacao
-    print("Hotel atualizado com sucesso.")
+
+    return 200, hoteis[id_hotel].copy()
+
 
 # DELETE
 def remover_hotel(id_hotel):
     if id_hotel not in hoteis:
-        print("Hotel não encontrado.")
-        return
-    del hoteis[id_hotel]
-    print("Hotel removido com sucesso.")
+        return 404, "Hotel não encontrado."
 
+    hotel_removido = hoteis.pop(id_hotel)
 
+    return 200, {
+        "id_hotel": id_hotel,
+        "hotel_removido": hotel_removido
+    }
 
 
 
