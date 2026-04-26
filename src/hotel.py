@@ -22,7 +22,8 @@ def criar_hotel(nome, endereco, telefone, classificacao):
 
 # READ (todos)
 def listar_hoteis():
-    return 200, hoteis.copy()
+    # Corrigido para garantir que o retorno seja uma lista de dicionários com os IDs
+    return 200, [{"id_hotel": id, **dados} for id, dados in hoteis.items()]
 
 
 # READ (um hotel)
@@ -30,7 +31,8 @@ def consultar_hotel(id_hotel):
     if id_hotel not in hoteis:
         return 404, "Hotel não encontrado."
 
-    return 200, hoteis[id_hotel].copy()
+    # Adicionado o id_hotel no retorno para manter o padrão
+    return 200, {"id_hotel": id_hotel, **hoteis[id_hotel].copy()}
 
 
 # UPDATE
@@ -50,7 +52,8 @@ def atualizar_hotel(id_hotel, nome=None, endereco=None, telefone=None, classific
     if classificacao is not None:
         hoteis[id_hotel]["classificacao"] = classificacao
 
-    return 200, hoteis[id_hotel].copy()
+    # Corrigido para retornar o dicionário completo com o ID após a atualização
+    return 200, {"id_hotel": id_hotel, **hoteis[id_hotel].copy()}
 
 
 # DELETE
@@ -64,17 +67,6 @@ def remover_hotel(id_hotel):
         "id_hotel": id_hotel,
         "hotel_removido": hotel_removido
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
