@@ -24,10 +24,10 @@ from reserva import (
 def menu():
     print("\n===== SISTEMA HOTEL COMPLETO =====")
     print("1 - Criar cliente      | 6  - Criar hotel       | 11 - Criar quarto      | 16 - Criar reserva")
-    print("2 - Listar clientes    | 7  - Listar hotéis      | 12 - Listar quartos    | 17 - Listar reservas")
+    print("2 - Listar clientes    | 7  - Listar hotéis     | 12 - Listar quartos    | 17 - Listar reservas")
     print("3 - Consultar cliente  | 8  - Consultar hotel    | 13 - Consultar quarto   | 18 - Consultar reserva")
     print("4 - Atualizar cliente  | 9  - Atualizar hotel    | 14 - Atualizar quarto   | 19 - Atualizar reserva")
-    print("5 - Remover cliente    | 10 - Remover hotel      | 15 - Remover quarto     | 20 - Remover reserva")
+    print("5 - Remover cliente    | 10 - Remover hotel     | 15 - Remover quarto     | 20 - Remover reserva")
     print("0 - Sair")
 
 def main():
@@ -38,14 +38,26 @@ def main():
         # ========= CLIENTE =========
         if op == "1":
             nome = input("Nome: ")
+            nif = input("NIF: ") # ADICIONADO: Faltava o NIF conforme a regra
             telefone = input("Telefone: ")
             email = input("Email: ")
             data = input("Data nascimento (YYYY-MM-DD): ")
-            rc = criar_cliente(nome, telefone, email, data)
+            # Corrigido para passar o NIF
+            rc = criar_cliente(nome, nif, telefone, email, data)
             print(f"{'Sucesso' if rc[0]==201 else 'Erro'}: {rc[1]}")
 
         elif op == "2":
             listar_clientes()
+
+        elif op == "4": # ADICIONADO: Exemplo Update Cliente com NIF
+            id_c = input("ID do cliente: ")
+            n = input("Novo nome (vazio p/ manter): ")
+            ni = input("Novo NIF (vazio p/ manter): ")
+            t = input("Novo telefone (vazio p/ manter): ")
+            e = input("Novo email (vazio p/ manter): ")
+            d = input("Nova data (vazio p/ manter): ")
+            rc = atualizar_cliente(id_c, n or None, ni or None, t or None, e or None, d or None)
+            print(f"{'Sucesso' if rc[0]==200 else 'Erro'}: {rc[1]}")
 
         # ========= HOTEL =========
         elif op == "6":
@@ -65,7 +77,7 @@ def main():
             descricao = input("Descrição: ")
             tipo = input("Tipo: ")
             preco = input("Preço: ")
-            lotacao = input("Lotação: ") # Campo adicionado conforme regra
+            lotacao = input("Lotação: ") 
             rc = criar_quarto(numero, descricao, tipo, preco, lotacao)
             print(f"{'Sucesso' if rc[0]==201 else 'Erro'}: {rc[1]}")
 
@@ -74,12 +86,12 @@ def main():
 
         # ========= RESERVA =========
         elif op == "16":
-            id_hotel = input("ID do Hotel: ") # Campo adicionado conforme regra
+            id_hotel = input("ID do Hotel: ") 
             checkin = input("Data check-in (YYYY-MM-DD): ")
             checkout = input("Data check-out (YYYY-MM-DD): ")
             quartos_ids = input("IDs dos quartos (separados por vírgula): ").replace(" ", "").split(",")
             valor = input("Valor total: ")
-            status = input("Status da reserva: ") # Campo adicionado conforme regra
+            status = input("Status da reserva: ") 
             
             rc = criar_reserva(id_hotel, checkin, checkout, quartos_ids, valor, status)
             print(f"{'Sucesso' if rc[0]==201 else 'Erro'}: {rc[1]}")
@@ -87,15 +99,24 @@ def main():
         elif op == "17":
             listar_reservas()
 
-        # ========= CONSULTAS / UPDATES / REMOÇÕES (Exemplos simplificados) =========
+        # ========= CONSULTAS / REMOÇÕES =========
         elif op in ["3", "8", "13", "18"]:
             id_busca = input("Introduza o ID para consultar: ")
-            if op == "3": consultar_cliente(id_busca)
-            if op == "8": consultar_hotel(id_busca)
-            if op == "13": consultar_quarto(id_busca)
-            if op == "18": consultar_reserva(id_busca)
+            if op == "3": print(consultar_cliente(id_busca))
+            if op == "8": print(consultar_hotel(id_busca))
+            if op == "13": print(consultar_quarto(id_busca))
+            if op == "18": print(consultar_reserva(id_busca))
 
-        elif op == "14": # Exemplo Update Quarto com Lotação
+        elif op in ["5", "10", "15", "20"]:
+            id_rem = input("Introduza o ID para remover: ")
+            if op == "5": rc = remover_cliente(id_rem)
+            if op == "10": rc = remover_hotel(id_rem)
+            if op == "15": rc = remover_quarto(id_rem)
+            if op == "20": rc = remover_reserva(id_rem)
+            print(f"{'Sucesso' if rc[0]==200 else 'Erro'}: {rc[1]}")
+
+        # ========= UPDATES (Quarto e Reserva já estavam ok) =========
+        elif op == "14":
             id_q = input("ID do quarto: ")
             n = input("Novo número (vazio p/ manter): ")
             d = input("Nova desc (vazio p/ manter): ")
@@ -105,7 +126,7 @@ def main():
             rc = atualizar_quarto(id_q, n or None, d or None, t or None, p or None, l or None)
             print(f"{'Sucesso' if rc[0]==200 else 'Erro'}: {rc[1]}")
 
-        elif op == "19": # Exemplo Update Reserva Completo
+        elif op == "19":
             id_r = input("ID da reserva: ")
             h = input("Novo Hotel ID (vazio p/ manter): ")
             ci = input("Novo Check-in (vazio p/ manter): ")
@@ -122,23 +143,10 @@ def main():
             print("A sair...")
             break
         else:
-            print("Opção inválida ou funcionalidade em manutenção.")
+            print("Opção inválida.")
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
