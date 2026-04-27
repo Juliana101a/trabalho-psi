@@ -2,22 +2,25 @@
 
 # ==============================
 # utils.py
-# funções auxiliares unificadas
+# Ferramentas auxiliares e IDs
 # ==============================
 
 from datetime import datetime
 
 # ------------------------------
-# Contadores Globais para IDs
+# Contadores Globais
 # ------------------------------
+# Garantem que os IDs sejam sequenciais e únicos
 contador_cliente = 1
 contador_hotel = 1
 contador_id_quarto = 1
 contador_id_reserva = 1
+contador_id_pagamento = 1
 
 # ------------------------------
-# Funções de gerar IDs
+# Geradores de ID (Letra + 000)
 # ------------------------------
+
 def gerar_id_cliente():
     global contador_cliente
     novo_id = f"C{contador_cliente:03d}"
@@ -42,23 +45,36 @@ def gerar_id_reserva():
     contador_id_reserva += 1
     return novo_id
 
+def gerar_id_pagamento():
+    global contador_id_pagamento
+    novo_id = f"P{contador_id_pagamento:03d}"
+    contador_id_pagamento += 1
+    return novo_id
+
 # ------------------------------
-# Funções de validação de datas
+# Gestão de Datas e Tempo
 # ------------------------------
+
+def obter_data_hora_atual():
+    """Retorna o carimbo de data/hora para logs e pagamentos."""
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
 def validar_data(data_texto):
-    """Valida se a string está no formato YYYY-MM-DD"""
+    """Valida se a string segue o padrão YYYY-MM-DD."""
     try:
+        if not data_texto:
+            return False
         datetime.strptime(data_texto, "%Y-%m-%d")
         return True
     except (ValueError, TypeError):
         return False
 
 def validar_data_nascimento(data_texto):
-    """Valida o formato da data de nascimento"""
+    """Alias para clareza no cadastro de clientes."""
     return validar_data(data_texto)
 
 def validar_datas_reserva(checkin, checkout):
-    """Garante que o checkout seja posterior ao checkin"""
+    """Garante que o checkout seja cronologicamente posterior ao checkin."""
     if not validar_data(checkin) or not validar_data(checkout):
         return False
     
@@ -66,10 +82,6 @@ def validar_datas_reserva(checkin, checkout):
     dt_out = datetime.strptime(checkout, "%Y-%m-%d")
     
     return dt_out > dt_in
-
-
-
-
 
 
 
