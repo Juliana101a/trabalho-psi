@@ -10,10 +10,11 @@ from utils import gerar_id_quarto
 quartos = {}
 
 # CREATE
-def criar_quarto(numero, descricao, tipo_quarto, preco, lotacao):
+def criar_quarto(id_hotel, numero, descricao, tipo_quarto, preco, lotacao):
     id_quarto = gerar_id_quarto()
     
     quartos[id_quarto] = {
+        "id_hotel": id_hotel, # Adicionado conforme solicitado
         "numero": numero,
         "descricao": descricao,
         "tipo_quarto": tipo_quarto,
@@ -34,7 +35,8 @@ def listar_quartos():
     lista_formatada = [{"id_quarto": id_q, **dados} for id_q, dados in quartos.items()]
     
     for q in lista_formatada:
-        print(f"ID: {q['id_quarto']} | Nº: {q['numero']} | Tipo: {q['tipo_quarto']} | Lotação: {q['lotacao']}")
+        print(f"ID: {q['id_quarto']} | Hotel: {q['id_hotel']} | Nº: {q['numero']} | "
+              f"Tipo: {q['tipo_quarto']} | Lotação: {q['lotacao']}")
         
     return 200, lista_formatada
 
@@ -49,11 +51,13 @@ def consultar_quarto(id_quarto):
     return 200, dados
 
 # UPDATE
-def atualizar_quarto(id_quarto, numero=None, descricao=None, tipo_quarto=None, preco=None, lotacao=None):
+def atualizar_quarto(id_quarto, id_hotel=None, numero=None, descricao=None, tipo_quarto=None, preco=None, lotacao=None):
     if id_quarto not in quartos:
         print("Quarto não encontrado.")
         return 404, "Quarto não encontrado."
     
+    if id_hotel is not None:
+        quartos[id_quarto]["id_hotel"] = id_hotel
     if numero is not None:
         quartos[id_quarto]["numero"] = numero
     if descricao is not None:
@@ -77,15 +81,6 @@ def remover_quarto(id_quarto):
     quarto_removido = quartos.pop(id_quarto)
     print("Quarto removido com sucesso.")
     return 200, {"id_quarto": id_quarto, "quarto_removido": quarto_removido}
-
-
-
-
-
-
-
-
-
 
 
 
