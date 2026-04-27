@@ -1,159 +1,117 @@
 
 # ==============================
 # main.py
-# Sistema completo (Cliente, Hotel, Quarto, Reserva)
+# Interface do Sistema Hoteleiro
 # ==============================
 
-from cliente import (
-    criar_cliente, listar_clientes, consultar_cliente,
-    atualizar_cliente, remover_cliente
-)
-from hotel import (
-    criar_hotel, listar_hoteis, consultar_hotel,
-    atualizar_hotel, remover_hotel
-)
-from quarto import (
-    criar_quarto, listar_quartos, consultar_quarto,
-    atualizar_quarto, remover_quarto
-)
-from reserva import (
-    criar_reserva, listar_reservas, consultar_reserva,
-    atualizar_reserva, remover_reserva
-)
+from cliente import *
+from hotel import *
+from quarto import *
+from reserva import *
+from pagamento import *
 
-def menu():
-    print("\n===== SISTEMA HOTEL COMPLETO =====")
-    print("1 - Criar cliente      | 6  - Criar hotel       | 11 - Criar quarto      | 16 - Criar reserva")
-    print("2 - Listar clientes    | 7  - Listar hotéis     | 12 - Listar quartos    | 17 - Listar reservas")
-    print("3 - Consultar cliente  | 8  - Consultar hotel    | 13 - Consultar quarto   | 18 - Consultar reserva")
-    print("4 - Atualizar cliente  | 9  - Atualizar hotel    | 14 - Atualizar quarto   | 19 - Atualizar reserva")
-    print("5 - Remover cliente    | 10 - Remover hotel     | 15 - Remover quarto     | 20 - Remover reserva")
-    print("0 - Sair")
+def exibir_menu():
+    print("\n" + "="*70)
+    print("                SISTEMA DE GESTÃO HOTELEIRA")
+    print("="*70)
+    print("  1- Criar Cliente      |  6- Criar Hotel      | 11- Criar Quarto")
+    print("  2- Listar Clientes    |  7- Listar Hotéis    | 12- Listar Quartos")
+    print("  3- Consultar Cliente  |  8- Consultar Hotel  | 13- Consultar Quarto")
+    print("  4- Atualizar Cliente  |  9- Atualizar Hotel  | 14- Atualizar Quarto")
+    print("  5- Remover Cliente    | 10- Remover Hotel    | 15- Remover Quarto")
+    print("-" * 70)
+    print(" 16- Criar Reserva      | 21- Registrar Pagamento")
+    print(" 17- Listar Reservas    | 22- Listar Pagamentos")
+    print(" 18- Consultar Reserva  | 23- Consultar Pagamento")
+    print(" 19- Atualizar Reserva  | 24- Atualizar Pagamento")
+    print(" 20- Remover Reserva    | 25- Remover Pagamento")
+    print("-" * 70)
+    print("  0- Sair")
+    print("="*70)
 
 def main():
     while True:
-        menu()
+        exibir_menu()
         op = input("Escolha uma opção: ")
 
-        # ========= CLIENTE =========
+        # --- CLIENTE ---
         if op == "1":
             nome = input("Nome: ")
-            nif = input("NIF: ") # ADICIONADO: Faltava o NIF conforme a regra
-            telefone = input("Telefone: ")
-            email = input("Email: ")
-            data = input("Data nascimento (YYYY-MM-DD): ")
-            # Corrigido para passar o NIF
-            rc = criar_cliente(nome, nif, telefone, email, data)
-            print(f"{'Sucesso' if rc[0]==201 else 'Erro'}: {rc[1]}")
+            nif = input("NIF: ")
+            tel = input("Telefone: ")
+            mail = input("Email: ")
+            data = input("Data Nascimento (YYYY-MM-DD): ")
+            status, msg = criar_cliente(nome, nif, tel, mail, data)
+            print(f"\n[{status}] {msg}")
 
         elif op == "2":
-            listar_clientes()
+            status, lista = listar_clientes()
+            print(f"\nClientes: {lista}")
 
-        elif op == "4": # ADICIONADO: Exemplo Update Cliente com NIF
-            id_c = input("ID do cliente: ")
-            n = input("Novo nome (vazio p/ manter): ")
-            ni = input("Novo NIF (vazio p/ manter): ")
-            t = input("Novo telefone (vazio p/ manter): ")
-            e = input("Novo email (vazio p/ manter): ")
-            d = input("Nova data (vazio p/ manter): ")
-            rc = atualizar_cliente(id_c, n or None, ni or None, t or None, e or None, d or None)
-            print(f"{'Sucesso' if rc[0]==200 else 'Erro'}: {rc[1]}")
-
-        # ========= HOTEL =========
+        # --- HOTEL ---
         elif op == "6":
-            nome = input("Nome do hotel: ")
-            endereco = input("Endereço: ")
-            telefone = input("Telefone: ")
-            classificacao = input("Classificação: ")
-            rc = criar_hotel(nome, endereco, telefone, classificacao)
-            print(f"{'Sucesso' if rc[0]==201 else 'Erro'}: {rc[1]}")
+            n = input("Nome do Hotel: ")
+            e = input("Endereço: ")
+            t = input("Telefone: ")
+            c = input("Classificação (1-5): ")
+            status, msg = criar_hotel(n, e, t, c)
+            print(f"\n[{status}] {msg}")
 
-        elif op == "7":
-            listar_hoteis()
-
-        # ========= QUARTO =========
+        # --- QUARTO ---
         elif op == "11":
-            numero = input("Número do quarto: ")
-            descricao = input("Descrição: ")
-            tipo = input("Tipo: ")
-            preco = input("Preço: ")
-            lotacao = input("Lotação: ") 
-            rc = criar_quarto(numero, descricao, tipo, preco, lotacao)
-            print(f"{'Sucesso' if rc[0]==201 else 'Erro'}: {rc[1]}")
+            num = input("Número do Quarto: ")
+            des = input("Descrição: ")
+            tip = input("Tipo: ")
+            pre = float(input("Preço: "))
+            lot = int(input("Lotação: "))
+            status, msg = criar_quarto(num, des, tip, pre, lot)
+            print(f"\n[{status}] {msg}")
 
-        elif op == "12":
-            listar_quartos()
-
-        # ========= RESERVA =========
+        # --- RESERVA ---
         elif op == "16":
-            id_hotel = input("ID do Hotel: ") 
-            checkin = input("Data check-in (YYYY-MM-DD): ")
-            checkout = input("Data check-out (YYYY-MM-DD): ")
-            quartos_ids = input("IDs dos quartos (separados por vírgula): ").replace(" ", "").split(",")
-            valor = input("Valor total: ")
-            status = input("Status da reserva: ") 
-            
-            rc = criar_reserva(id_hotel, checkin, checkout, quartos_ids, valor, status)
-            print(f"{'Sucesso' if rc[0]==201 else 'Erro'}: {rc[1]}")
+            idh = input("ID do Hotel: ")
+            cin = input("Check-in (YYYY-MM-DD): ")
+            out = input("Check-out (YYYY-MM-DD): ")
+            q_ids = input("IDs dos Quartos (separados por vírgula): ").replace(" ", "").split(",")
+            val = float(input("Valor Total: "))
+            st = input("Status (Pendente/Confirmada): ")
+            status, msg = criar_reserva(idh, cin, out, q_ids, val, st)
+            print(f"\n[{status}] {msg}")
 
-        elif op == "17":
-            listar_reservas()
+        # --- PAGAMENTO ---
+        elif op == "21":
+            idr = input("ID da Reserva: ")
+            val = float(input("Valor Pago: "))
+            met = input("Método (Cartão/Dinheiro): ")
+            st = input("Status Pagamento (Confirmado/Pendente): ")
+            status, msg = registrar_pagamento(idr, val, met, st)
+            print(f"\n[{status}] {msg}")
 
-        # ========= CONSULTAS / REMOÇÕES =========
-        elif op in ["3", "8", "13", "18"]:
-            id_busca = input("Introduza o ID para consultar: ")
-            if op == "3": print(consultar_cliente(id_busca))
-            if op == "8": print(consultar_hotel(id_busca))
-            if op == "13": print(consultar_quarto(id_busca))
-            if op == "18": print(consultar_reserva(id_busca))
+        # --- CONSULTAS (Utilizando os IDs) ---
+        elif op in ["3", "8", "13", "18", "23"]:
+            idx = input("Introduza o ID: ")
+            if op == "3":  print(consultar_cliente(idx))
+            if op == "8":  print(consultar_hotel(idx))
+            if op == "13": print(consultar_quarto(idx))
+            if op == "18": print(consultar_reserva(idx))
+            if op == "23": print(consultar_pagamento(idx))
 
-        elif op in ["5", "10", "15", "20"]:
-            id_rem = input("Introduza o ID para remover: ")
-            if op == "5": rc = remover_cliente(id_rem)
-            if op == "10": rc = remover_hotel(id_rem)
-            if op == "15": rc = remover_quarto(id_rem)
-            if op == "20": rc = remover_reserva(id_rem)
-            print(f"{'Sucesso' if rc[0]==200 else 'Erro'}: {rc[1]}")
-
-        # ========= UPDATES (Quarto e Reserva já estavam ok) =========
-        elif op == "14":
-            id_q = input("ID do quarto: ")
-            n = input("Novo número (vazio p/ manter): ")
-            d = input("Nova desc (vazio p/ manter): ")
-            t = input("Novo tipo (vazio p/ manter): ")
-            p = input("Novo preço (vazio p/ manter): ")
-            l = input("Nova lotação (vazio p/ manter): ")
-            rc = atualizar_quarto(id_q, n or None, d or None, t or None, p or None, l or None)
-            print(f"{'Sucesso' if rc[0]==200 else 'Erro'}: {rc[1]}")
-
-        elif op == "19":
-            id_r = input("ID da reserva: ")
-            h = input("Novo Hotel ID (vazio p/ manter): ")
-            ci = input("Novo Check-in (vazio p/ manter): ")
-            co = input("Novo Check-out (vazio p/ manter): ")
-            q = input("Novos Quartos IDs (vazio p/ manter): ")
-            v = input("Novo Valor (vazio p/ manter): ")
-            s = input("Novo Status (vazio p/ manter): ")
-            
-            list_q = q.replace(" ", "").split(",") if q else None
-            rc = atualizar_reserva(id_r, h or None, ci or None, co or None, list_q, v or None, s or None)
-            print(f"{'Sucesso' if rc[0]==200 else 'Erro'}: {rc[1]}")
+        # --- REMOÇÕES ---
+        elif op in ["5", "10", "15", "20", "25"]:
+            idx = input("Introduza o ID para remover: ")
+            if op == "5":  s, m = remover_cliente(idx)
+            if op == "10": s, m = remover_hotel(idx)
+            if op == "15": s, m = remover_quarto(idx)
+            if op == "20": s, m = remover_reserva(idx)
+            if op == "25": s, m = remover_pagamento(idx)
+            print(f"\n[{s}] {m}")
 
         elif op == "0":
-            print("A sair...")
+            print("A encerrar sistema...")
             break
         else:
-            print("Opção inválida.")
+            print("Opção inválida!")
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
 
