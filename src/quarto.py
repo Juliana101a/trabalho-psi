@@ -19,6 +19,7 @@ def criar_quarto(numero, descricao, tipo_quarto, preco, lotacao, id_hotel):
     id_quarto = gerar_id_quarto()
 
     quartos[id_quarto] = {
+        "id_hotel": id_hotel, # Adicionado conforme solicitado
         "numero": numero,
         "descricao": descricao,
         "tipo_quarto": tipo_quarto,
@@ -120,15 +121,6 @@ def consultar_quartos_disponiveis(reservas):
 
     print(f"Total de quartos disponíveis: {total}")
     return 200, {"total_disponivel": total, "quartos": disponiveis}
-
-
-
-
-
-
-
-
-
 
 
 

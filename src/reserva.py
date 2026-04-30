@@ -123,11 +123,3 @@ def remover_reserva(id_reserva):
 
 
 
-
-
-
-
-
-
-
-
