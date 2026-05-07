@@ -89,5 +89,3 @@ def converter_para_int(valor):
     except (ValueError, TypeError):
         return 0
 
-
-

@@ -81,7 +81,3 @@ def remover_quarto(id_quarto):
     return 200, id_quarto
 
 
-
-
-
-
