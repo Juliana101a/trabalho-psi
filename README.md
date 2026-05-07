@@ -1,104 +1,148 @@
-Projeto Gestor Hotel – CRUD Hotel
-📘 Descrição do Projeto
 
-Este projeto foi desenvolvido com fins pedagógicos para o Curso Profissional de Gestão e Programação de Sistemas Informáticos (GPSI) – 10.º ano.
+# 🏨 Gestor de Hotel – Sistema CRUD em Python
 
-O objetivo principal é demonstrar como implementar operações CRUD (Create, Read, Update, Delete) em Python utilizando:
+## 📘 Descrição
 
-Funções (sem classes)
-Dicionários
-Separação por ficheiros
-Validação de dados
-Menus em terminal
+Este projeto foi desenvolvido no âmbito do Curso Profissional de Gestão e Programação de Sistemas Informáticos (GPSI) – 10.º ano, com o objetivo de aplicar conceitos fundamentais de programação através da construção de um sistema de gestão hoteleira.
 
-O projeto simula a gestão das entidades Cliente, Hotel, Quarto e Reserva.
+A aplicação permite gerir diferentes entidades de um hotel, incluindo clientes, hotéis, quartos, reservas e pagamentos, implementando operações CRUD (**Create, Read, Update, Delete**) com armazenamento em memória.
 
-🎯 Objetivos Pedagógicos
+---
 
-Com este projeto, aprendi a:
+## 🎯 Objetivos de Aprendizagem
 
-Organizar código em múltiplos ficheiros Python
-Utilizar dicionários como estrutura de armazenamento
-Implementar operações CRUD
-Validar dados introduzidos pelo utilizador
-Gerar identificadores automáticos
-Trabalhar com datas em Python
-Separar lógica de negócio da interface (menu)
-📂 Estrutura do Projeto
+Durante o desenvolvimento deste projeto foram trabalhados os seguintes conceitos:
+
+* Organização de código em múltiplos ficheiros Python
+* Utilização de dicionários como estrutura de dados
+* Implementação de operações CRUD
+* Validação de dados introduzidos pelo utilizador
+* Geração automática de identificadores (IDs)
+* Manipulação e validação de datas
+* Separação entre lógica de negócio e interface (menu)
+
+---
+
+## 🧩 Funcionalidades
+
+O sistema permite:
+
+* 👤 Gestão de Clientes
+* 🏨 Gestão de Hotéis
+* 🛏️ Gestão de Quartos
+* 📅 Gestão de Reservas
+* 💳 Gestão de Pagamentos
+
+Cada entidade suporta operações completas de:
+
+* Criar
+* Listar
+* Consultar
+* Atualizar
+* Remover
+
+---
+
+## 📂 Estrutura do Projeto
+
+```
 gestor_hotel/
 └── src/
-    ├── main_app.py       # Menu principal do sistema, interface em terminal
-    ├── cliente.py        # CRUD completo da entidade Cliente
-    ├── hotel.py          # CRUD e gestão da entidade Hotel
-    ├── quarto.py         # CRUD completo da entidade Quarto
-    ├── reserva.py        # CRUD completo da entidade Reserva
-    └── utils.py          # Funções auxiliares (geração de IDs, validação de datas)
-Descrição de cada ficheiro
+    ├── main_app.py   # Interface em terminal (menu principal)
+    ├── cliente.py    # CRUD de clientes
+    ├── hotel.py      # CRUD de hotéis
+    ├── quarto.py     # CRUD de quartos
+    ├── reserva.py    # CRUD de reservas
+    ├── pagamento.py  # CRUD de pagamentos
+    └── utils.py      # Funções auxiliares
+```
 
-main_app.py
+---
 
-Contém o menu interativo em terminal.
-Responsável apenas por apresentar opções, recolher dados do utilizador e chamar funções dos outros módulos.
+## 📄 Descrição dos Módulos
 
-cliente.py
+### `main_app.py`
 
-CRUD completo da entidade Cliente: criar, listar, consultar, atualizar e remover clientes.
-Inclui validações como data de nascimento e geração automática de ID.
-Armazenamento em dicionário na memória.
+Responsável pela interface em terminal.
+Apresenta o menu, recolhe dados do utilizador e chama as funções dos módulos.
 
-hotel.py
+### `cliente.py`
 
-CRUD completo da entidade Hotel: criar, listar, consultar, atualizar e remover hotéis.
-Inclui validações como geração automática de ID.
-Armazenamento em dicionário na memória.
+Gestão de clientes com validação de dados (ex: data de nascimento) e geração automática de ID.
 
-quarto.py
+### `hotel.py`
 
-CRUD completo da entidade Quarto: criar, listar, consultar, atualizar e remover quartos.
-Campos: número do quarto, descrição, tipo (suite, solteiro, casal), preço.
+Gestão de hotéis, incluindo criação, edição e remoção.
 
-reserva.py
+### `quarto.py`
 
-CRUD completo da entidade Reserva: criar, listar, consultar, atualizar e remover reservas.
-Campos: ID da reserva, data check-in, data check-out, lista de quartos, valor da reserva.
+Gestão de quartos associados a hotéis, incluindo preço, tipo e descrição.
 
-utils.py
+### `reserva.py`
 
-Funções auxiliares para todo o projeto:
-Geração automática de IDs
-Validação de datas no formato YYYY-MM-DD
-▶️ Como Executar o Projeto
+Gestão de reservas com validação de datas (check-in e check-out) e associação a clientes, hotéis e quartos.
 
-1️⃣ Garantir que o Python está instalado.
+### `pagamento.py`
 
-2️⃣ Navegar até a pasta src no terminal:
+Gestão de pagamentos associados às reservas.
+Inclui registo de pagamentos, controlo de valor pago, método de pagamento e atualização do estado da reserva.
 
-cd gestor_hotel/src
+### `utils.py`
 
-3️⃣ Executar o menu principal:
+Funções auxiliares reutilizáveis:
 
-python main_app.py
+* Geração de IDs
+* Validação de datas
+* Conversão de tipos
 
-4️⃣ Utilizar o menu apresentado para gerir clientes, hotéis, quartos e reservas.
+---
 
-📚 Conceitos Trabalhados
-Funções
-Dicionários
-Módulos Python e importação entre ficheiros
-Validação de dados
-Estruturas condicionais
-Ciclos (while)
-Operações CRUD
-👨‍🏫 Utilização
+## ▶️ Como Executar
 
-Este projeto foi desenvolvido para:
+1. Garantir que o Python está instalado
+2. Navegar até à pasta do projeto:
 
-Introdução prática ao CRUD
-Exercícios guiados
-Avaliação prática
-Preparação para projetos maiores
-📄 Licença Pedagógica
+   ```
+   cd gestor_hotel/src
+   ```
+3. Executar o programa:
 
-Projeto desenvolvido exclusivamente para fins educativos no curso GPSI – 10.º ano.
+   ```
+   python main_app.py
+   ```
+4. Utilizar o menu interativo no terminal
 
-Pode ser reutilizado e adaptado livremente.
+---
+
+## 📚 Conceitos Aplicados
+
+* Funções
+* Dicionários
+* Modularização de código
+* Estruturas condicionais (`if/else`)
+* Ciclos (`while`)
+* Validação de dados
+* CRUD
+
+---
+
+## 🚀 Possíveis Melhorias Futuras
+
+* Persistência de dados (SQLite ou ficheiros)
+* Interface gráfica (Tkinter ou web)
+* API REST (FastAPI ou Flask)
+* Sistema de autenticação
+* Controlo de disponibilidade de quartos (evitar overbooking)
+* Gestão de pagamentos parciais e totais
+
+---
+
+## 👨‍🏫 Contexto Educativo
+
+Projeto desenvolvido com fins pedagógicos no curso GPSI – 10.º ano, como introdução prática ao desenvolvimento de aplicações estruturadas em Python.
+
+---
+
+## 📄 Licença
+
+Uso livre para fins educativos. Pode ser reutilizado e adaptado.

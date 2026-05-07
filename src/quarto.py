@@ -1,5 +1,3 @@
-
-
 # ==============================
 # quarto.py
 # CRUD simples para entidade Quarto
@@ -11,51 +9,51 @@ quartos = {}
 
 # CREATE
 def criar_quarto(id_hotel, numero, descricao, tipo_quarto, preco, lotacao):
+
     id_quarto = gerar_id_quarto()
-    
+
     quartos[id_quarto] = {
-        "id_hotel": id_hotel, # Adicionado conforme solicitado
+        "id_hotel": id_hotel,
         "numero": numero,
         "descricao": descricao,
         "tipo_quarto": tipo_quarto,
         "preco": preco,
         "lotacao": lotacao
     }
-    
-    print(f"Quarto criado com sucesso. ID: {id_quarto}")
-    return 201, {"id_quarto": id_quarto, **quartos[id_quarto]}
+
+    return 201, id_quarto
+
 
 # READ (listar todos)
 def listar_quartos():
+
     if not quartos:
-        print("Não existem quartos registados.")
-        return 404, "Não existem quartos registados."
-    
-    # Retorna lista de dicionários com IDs incluídos
-    lista_formatada = [{"id_quarto": id_q, **dados} for id_q, dados in quartos.items()]
-    
-    for q in lista_formatada:
-        print(f"ID: {q['id_quarto']} | Hotel: {q['id_hotel']} | Nº: {q['numero']} | "
-              f"Tipo: {q['tipo_quarto']} | Lotação: {q['lotacao']}")
-        
+        return 200, []
+
+    lista_formatada = [
+        {"id_quarto": id_q, **dados}
+        for id_q, dados in quartos.items()
+    ]
+
     return 200, lista_formatada
 
-# READ (consultar individual)
+
+# READ (consultar um)
 def consultar_quarto(id_quarto):
+
     if id_quarto not in quartos:
-        print("Quarto não encontrado.")
         return 404, "Quarto não encontrado."
-    
-    dados = {"id_quarto": id_quarto, **quartos[id_quarto].copy()}
-    print(dados)
-    return 200, dados
+
+    return 200, quartos[id_quarto]
+
 
 # UPDATE
-def atualizar_quarto(id_quarto, id_hotel=None, numero=None, descricao=None, tipo_quarto=None, preco=None, lotacao=None):
+def atualizar_quarto(id_quarto, id_hotel=None, numero=None, descricao=None,
+                     tipo_quarto=None, preco=None, lotacao=None):
+
     if id_quarto not in quartos:
-        print("Quarto não encontrado.")
         return 404, "Quarto não encontrado."
-    
+
     if id_hotel is not None:
         quartos[id_quarto]["id_hotel"] = id_hotel
     if numero is not None:
@@ -68,62 +66,18 @@ def atualizar_quarto(id_quarto, id_hotel=None, numero=None, descricao=None, tipo
         quartos[id_quarto]["preco"] = preco
     if lotacao is not None:
         quartos[id_quarto]["lotacao"] = lotacao
-        
-    print("Quarto atualizado com sucesso.")
-    return 200, {"id_quarto": id_quarto, **quartos[id_quarto].copy()}
+
+    return 200, id_quarto
+
 
 # DELETE
 def remover_quarto(id_quarto):
+
     if id_quarto not in quartos:
-        print("Quarto não encontrado.")
         return 404, "Quarto não encontrado."
-    
-    quarto_removido = quartos.pop(id_quarto)
-    print("Quarto removido com sucesso.")
-    return 200, {"id_quarto": id_quarto, "quarto_removido": quarto_removido}
 
+    quartos.pop(id_quarto)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return 200, id_quarto
 
 

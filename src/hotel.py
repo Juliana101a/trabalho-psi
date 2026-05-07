@@ -1,5 +1,3 @@
-
-
 from utils import gerar_id_hotel
 
 hoteis = {}
@@ -67,30 +65,3 @@ def remover_hotel(id_hotel):
         "id_hotel": id_hotel,
         "hotel_removido": hotel_removido
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
