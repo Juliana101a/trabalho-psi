@@ -1,3 +1,6 @@
+from persistencia import guardar_dados
+
+
 from utils import gerar_id_hotel
 
 hoteis = {}
@@ -61,7 +64,20 @@ def remover_hotel(id_hotel):
 
     hotel_removido = hoteis.pop(id_hotel)
 
+    guardar_dados("hoteis.json",hoteis)
+
     return 200, {
         "id_hotel": id_hotel,
         "hotel_removido": hotel_removido
     }
+
+
+
+
+
+
+
+
+
+
+
