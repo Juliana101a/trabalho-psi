@@ -4,6 +4,7 @@
 # ==============================
 
 from utils import gerar_id_quarto
+from persistencia import guardar_dados
 
 quartos = {}
 
@@ -20,6 +21,8 @@ def criar_quarto(id_hotel, numero, descricao, tipo_quarto, preco, lotacao):
         "preco": preco,
         "lotacao": lotacao
     }
+
+    guardar_dados("quartos.json", quartos)
 
     return 201, id_quarto
 
@@ -67,6 +70,8 @@ def atualizar_quarto(id_quarto, id_hotel=None, numero=None, descricao=None,
     if lotacao is not None:
         quartos[id_quarto]["lotacao"] = lotacao
 
+    guardar_dados("quartos.json", quartos)
+
     return 200, id_quarto
 
 
@@ -78,6 +83,10 @@ def remover_quarto(id_quarto):
 
     quartos.pop(id_quarto)
 
+    guardar_dados("quartos.json", quartos)
+
     return 200, id_quarto
+
+
 
 
