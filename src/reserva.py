@@ -5,6 +5,7 @@
 
 from utils import gerar_id_reserva, validar_data
 from quarto import quartos
+from persistencia import guardar_dados
 
 reservas = {}
 
@@ -38,6 +39,8 @@ def criar_reserva(id_hotel, id_quarto, data_checkin, data_checkout, lista_quarto
         "valor_total": valor_total,
         "status_reserva": status_reserva
     }
+
+    guardar_dados("reservas.json", reservas)
 
     return 201, id_reserva
 
@@ -104,6 +107,8 @@ def atualizar_reserva(id_reserva, id_hotel=None, id_quarto=None,
     if status_reserva is not None:
         reservas[id_reserva]["status_reserva"] = status_reserva
 
+    guardar_dados("reservas.json", reservas)
+
     return 200, id_reserva
 
 
@@ -115,4 +120,10 @@ def remover_reserva(id_reserva):
 
     reservas.pop(id_reserva)
 
+    guardar_dados("reservas.json", reservas)
+
     return 200, id_reserva
+
+
+
+
