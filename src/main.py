@@ -1,27 +1,53 @@
+from persistencia import carregar_dados
+
 from cliente import (
     criar_cliente, listar_clientes, consultar_cliente,
-    atualizar_cliente, remover_cliente
+    atualizar_cliente, remover_cliente, clientes
 )
+
 from hotel import (
     criar_hotel, listar_hoteis, consultar_hotel,
-    atualizar_hotel, remover_hotel
+    atualizar_hotel, remover_hotel, hoteis
 )
+
 from quarto import (
     criar_quarto, listar_quartos, consultar_quarto,
-    atualizar_quarto, remover_quarto
+    atualizar_quarto, remover_quarto, quartos
 )
+
 from reserva import (
     criar_reserva, listar_reservas, consultar_reserva,
-    atualizar_reserva, remover_reserva
+    atualizar_reserva, remover_reserva, reservas
 )
+
 from pagamento import (
     registrar_pagamento, listar_pagamentos, consultar_pagamento,
-    atualizar_pagamento, remover_pagamento
+    atualizar_pagamento, remover_pagamento, pagamentos
 )
-from utils import converter_para_float, converter_para_int
+
+from utils import (
+    converter_para_float,
+    converter_para_int,
+    atualizar_contadores
+)
+
+# ---------------------------------------------------------
+# Carregar dados JSON
+# ---------------------------------------------------------
+clientes.update(carregar_dados("clientes.json"))
+hoteis.update(carregar_dados("hoteis.json"))
+quartos.update(carregar_dados("quartos.json"))
+reservas.update(carregar_dados("reservas.json"))
+pagamentos.update(carregar_dados("pagamentos.json"))
+
+# ---------------------------------------------------------
+# Atualizar contadores dos IDs
+# ---------------------------------------------------------
+atualizar_contadores(clientes, quartos, reservas, pagamentos)
 
 
 def exibir_menu():
+
     print("\n" + "=" * 60)
     print("        SISTEMA DE GESTÃO HOTELEIRA")
     print("=" * 60)
@@ -42,12 +68,16 @@ def exibir_menu():
 
 
 def main():
+
     while True:
+
         exibir_menu()
+
         opcao = input("Escolha uma opção: ")
 
         # ---------------- CLIENTE ----------------
         if opcao == "1":
+
             status, res = criar_cliente(
                 input("Nome: "),
                 input("NIF: "),
@@ -55,19 +85,26 @@ def main():
                 input("Email: "),
                 input("Data nascimento (YYYY-MM-DD): ")
             )
+
             print(status, res)
 
         elif opcao == "2":
+
             status, lista = listar_clientes()
+
             print(status)
+
             for c in lista:
                 print(c)
 
         elif opcao == "3":
+
             status, res = consultar_cliente(input("ID Cliente: "))
+
             print(status, res)
 
         elif opcao == "4":
+
             status, res = atualizar_cliente(
                 input("ID Cliente: "),
                 input("Nome (ou Enter): ") or None,
@@ -76,42 +113,57 @@ def main():
                 input("Email (ou Enter): ") or None,
                 input("Data nascimento (ou Enter): ") or None
             )
+
             print(status, res)
 
         elif opcao == "5":
+
             status, res = remover_cliente(input("ID Cliente: "))
+
             print(status, res)
 
         # ---------------- HOTEL ----------------
         elif opcao == "6":
+
             status, res = criar_hotel(
                 input("Nome: "),
                 input("Endereço: "),
                 input("Telefone: "),
                 converter_para_int(input("Classificação: "))
             )
+
             print(status, res)
 
         elif opcao == "7":
+
             status, lista = listar_hoteis()
+
             print(status)
+
             for h in lista:
                 print(h)
 
         elif opcao == "8":
+
             status, res = consultar_hotel(input("ID Hotel: "))
+
             print(status, res)
 
         elif opcao == "9":
+
             status, res = atualizar_hotel(input("ID Hotel: "))
+
             print(status, res)
 
         elif opcao == "10":
+
             status, res = remover_hotel(input("ID Hotel: "))
+
             print(status, res)
 
         # ---------------- QUARTO ----------------
         elif opcao == "11":
+
             status, res = criar_quarto(
                 input("ID Hotel: "),
                 input("Número: "),
@@ -120,28 +172,39 @@ def main():
                 converter_para_float(input("Preço: ")),
                 converter_para_int(input("Lotação: "))
             )
+
             print(status, res)
 
         elif opcao == "12":
+
             status, lista = listar_quartos()
+
             print(status)
+
             for q in lista:
                 print(q)
 
         elif opcao == "13":
+
             status, res = consultar_quarto(input("ID Quarto: "))
+
             print(status, res)
 
         elif opcao == "14":
+
             status, res = atualizar_quarto(input("ID Quarto: "))
+
             print(status, res)
 
         elif opcao == "15":
+
             status, res = remover_quarto(input("ID Quarto: "))
+
             print(status, res)
 
         # ---------------- RESERVA ----------------
         elif opcao == "16":
+
             status, res = criar_reserva(
                 input("ID Hotel: "),
                 input("ID Quarto: "),
@@ -151,63 +214,102 @@ def main():
                 converter_para_float(input("Valor total: ")),
                 input("Status: ")
             )
+
             print(status, res)
 
         elif opcao == "17":
+
             status, lista = listar_reservas()
+
             print(status)
+
             for r in lista:
                 print(r)
 
         elif opcao == "18":
+
             status, res = consultar_reserva(input("ID Reserva: "))
+
             print(status, res)
 
         elif opcao == "19":
+
             status, res = atualizar_reserva(input("ID Reserva: "))
+
             print(status, res)
 
         elif opcao == "20":
+
             status, res = remover_reserva(input("ID Reserva: "))
+
             print(status, res)
 
         # ---------------- PAGAMENTO ----------------
         elif opcao == "21":
+
             status, res = registrar_pagamento(
                 input("ID Reserva: "),
                 converter_para_float(input("Valor: ")),
                 input("Método: "),
                 input("Status: ")
             )
+
             print(status, res)
 
         elif opcao == "22":
+
             status, lista = listar_pagamentos()
+
             print(status)
+
             for p in lista:
                 print(p)
 
         elif opcao == "23":
+
             status, res = consultar_pagamento(input("ID Pagamento: "))
+
             print(status, res)
 
         elif opcao == "24":
+
             status, res = atualizar_pagamento(input("ID Pagamento: "))
+
             print(status, res)
 
         elif opcao == "25":
+
             status, res = remover_pagamento(input("ID Pagamento: "))
+
             print(status, res)
 
         # ---------------- SAIR ----------------
         elif opcao == "0":
+
             print("A encerrar sistema...")
+
             break
 
         else:
+
             print("Opção inválida")
 
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
