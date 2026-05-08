@@ -1,3 +1,8 @@
+
+from persistencia import guardar_dados
+
+
+
 from utils import gerar_id_cliente, validar_data_nascimento
 
 clientes = {}
@@ -59,4 +64,13 @@ def remover_cliente(id_cliente):
         return 404, "Cliente não encontrado"
 
     clientes.pop(id_cliente)
+    guardar_dados("clientes.json", clientes)
+
     return 200, id_cliente
+
+
+
+
+
+
+
