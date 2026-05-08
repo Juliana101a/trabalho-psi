@@ -5,6 +5,7 @@
 
 from utils import gerar_id_pagamento, obter_data_hora_atual
 from reserva import reservas
+from persistencia import guardar_dados
 
 pagamentos = {}
 
@@ -32,6 +33,9 @@ def registrar_pagamento(id_reserva, valor_pago, metodo_pagamento, status_pagamen
         reservas[id_reserva]["status_reserva"] = "Paga"
 
     print(f"[LOG] Pagamento {id_pagamento} registado com sucesso.")
+
+    guardar_dados("pagamentos.json", pagamentos)
+
     return 201, id_pagamento
 
 
@@ -81,6 +85,9 @@ def atualizar_pagamento(id_pagamento, valor_pago=None, metodo_pagamento=None, st
                 reservas[res_id]["status_reserva"] = "Paga"
 
     print(f"[LOG] Pagamento {id_pagamento} atualizado.")
+
+    guardar_dados("pagamentos.json", pagamentos)
+
     return 200, id_pagamento
 
 
@@ -90,13 +97,8 @@ def remover_pagamento(id_pagamento):
     if id_pagamento not in pagamentos:
         return 404, "Erro: Impossível remover registro inexistente."
 
-    dados_removidos = pagamentos.pop(id_pagamento)
 
-    # segurança: só mexe na reserva se existir
-    id_reserva = dados_removidos["id_reserva"]
-    if id_reserva in reservas:
-        reservas[id_reserva]["status_reserva"] = "Pendente"
 
-    print(f"[LOG] Pagamento {id_pagamento} removido do sistema.")
 
-    return 200, id_pagamento
+
+
