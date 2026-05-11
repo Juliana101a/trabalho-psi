@@ -1,64 +1,58 @@
+
 from persistencia import guardar_dados
 
 hoteis = {}
 contador = 1
 
 
-def criar_hotel(nome, endereco, telefone, classificacao):
-
+def gerar_id():
     global contador
-
-    id_hotel = f"H{contador:03d}"
+    hid = f"H{contador:03d}"
     contador += 1
+    return hid
 
-    hoteis[id_hotel] = {
+
+def criar_hotel(nome, endereco, telefone, classif):
+    hid = gerar_id()
+    hoteis[hid] = {
         "nome": nome,
         "endereco": endereco,
         "telefone": telefone,
-        "classificacao": classificacao
+        "classificacao": classif
     }
-
     guardar_dados("hoteis.json", hoteis)
-
-    return 201, id_hotel
+    return 201, hid
 
 
 def listar_hoteis():
-    return 200, [{"id_hotel": i, **d} for i, d in hoteis.items()]
+    return 200, [{"id": k, **v} for k, v in hoteis.items()]
 
 
-def consultar_hotel(id_hotel):
-    if id_hotel not in hoteis:
-        return 404, "Não encontrado"
+def consultar_hotel(hid):
+    if hid not in hoteis:
+        return 404, "não encontrado"
+    return 200, {"id": hid, **hoteis[hid]}
 
-    return 200, {"id_hotel": id_hotel, **hoteis[id_hotel]}
 
+def atualizar_hotel(hid, nome=None, endereco=None, telefone=None, classif=None):
+    if hid not in hoteis:
+        return 404, "não encontrado"
 
-def atualizar_hotel(id_hotel, nome=None, endereco=None, telefone=None, classificacao=None):
-
-    if id_hotel not in hoteis:
-        return 404, "Não encontrado"
-
-    if nome is not None: hoteis[id_hotel]["nome"] = nome
-    if endereco is not None: hoteis[id_hotel]["endereco"] = endereco
-    if telefone is not None: hoteis[id_hotel]["telefone"] = telefone
-    if classificacao is not None: hoteis[id_hotel]["classificacao"] = classificacao
+    if nome: hoteis[hid]["nome"] = nome
+    if endereco: hoteis[hid]["endereco"] = endereco
+    if telefone: hoteis[hid]["telefone"] = telefone
+    if classif is not None: hoteis[hid]["classificacao"] = classif
 
     guardar_dados("hoteis.json", hoteis)
-
-    return 200, id_hotel
-
-
-def remover_hotel(id_hotel):
-
-    if id_hotel not in hoteis:
-        return 404, "Não encontrado"
-
-    return 200, hoteis.pop(id_hotel)
+    return 200, hid
 
 
+def remover_hotel(hid):
+    if hid not in hoteis:
+        return 404, "não encontrado"
 
-
-
+    r = hoteis.pop(hid)
+    guardar_dados("hoteis.json", hoteis)
+    return 200, r
 
 
