@@ -1,128 +1,78 @@
-# ==============================
-# reserva.py
-# CRUD simples para entidade Reserva
-# ==============================
 
-from utils import gerar_id_reserva, validar_data
-from quarto import quartos
 from persistencia import guardar_dados
+from quarto import quartos
+from utils import validar_data
 
 reservas = {}
+contador = 1
 
 
-# CREATE
-def criar_reserva(id_hotel, id_quarto, data_checkin, data_checkout, lista_quartos, valor_total, status_reserva):
+def gerar_id():
+    global contador
+    rid = f"R{contador:03d}"
+    contador += 1
+    return rid
 
-    # validação de datas
-    if not validar_data(data_checkin):
-        return 400, "Data de check-in inválida (YYYY-MM-DD)"
 
-    if not validar_data(data_checkout):
-        return 400, "Data de check-out inválida (YYYY-MM-DD)"
-
-    # validação de quartos
+def criar_reserva(id_hotel, id_quarto, checkin, checkout, extras, valor, status):
     if id_quarto not in quartos:
-        return 404, "Quarto principal não encontrado"
+        return 404, "quarto não existe"
 
-    for q in lista_quartos:
-        if q not in quartos:
-            return 404, f"Quarto {q} não encontrado"
+    if not validar_data(checkin) or not validar_data(checkout):
+        return 400, "data inválida"
 
-    id_reserva = gerar_id_reserva()
+    rid = gerar_id()
 
-    reservas[id_reserva] = {
+    reservas[rid] = {
         "id_hotel": id_hotel,
         "id_quarto": id_quarto,
-        "data_checkin": data_checkin,
-        "data_checkout": data_checkout,
-        "lista_quartos": lista_quartos,
-        "valor_total": valor_total,
-        "status_reserva": status_reserva
+        "checkin": checkin,
+        "checkout": checkout,
+        "extras": extras,
+        "valor": valor,
+        "status": status
     }
 
     guardar_dados("reservas.json", reservas)
+    return 201, rid
 
-    return 201, id_reserva
 
-
-# READ (listar todos)
 def listar_reservas():
-
-    if not reservas:
-        return 200, []
-
-    lista_formatada = [
-        {"id_reserva": id_r, **dados}
-        for id_r, dados in reservas.items()
-    ]
-
-    return 200, lista_formatada
+    return 200, [{"id": k, **v} for k, v in reservas.items()]
 
 
-# READ (consultar uma)
-def consultar_reserva(id_reserva):
-
-    if id_reserva not in reservas:
-        return 404, "Reserva não encontrada"
-
-    return 200, {"id_reserva": id_reserva, **reservas[id_reserva]}
+def consultar_reserva(rid):
+    if rid not in reservas:
+        return 404, "não encontrado"
+    return 200, {"id": rid, **reservas[rid]}
 
 
-# UPDATE
-def atualizar_reserva(id_reserva, id_hotel=None, id_quarto=None,
-                      data_checkin=None, data_checkout=None,
-                      lista_quartos=None, valor_total=None,
-                      status_reserva=None):
+def atualizar_reserva(rid, id_hotel=None, id_quarto=None, checkin=None, checkout=None, extras=None, valor=None, status=None):
+    if rid not in reservas:
+        return 404, "não encontrado"
 
-    if id_reserva not in reservas:
-        return 404, "Reserva não encontrada"
-
-    if id_hotel is not None:
-        reservas[id_reserva]["id_hotel"] = id_hotel
-
-    if id_quarto is not None:
-        if id_quarto not in quartos:
-            return 404, "Quarto não encontrado"
-        reservas[id_reserva]["id_quarto"] = id_quarto
-
-    if data_checkin is not None:
-        if not validar_data(data_checkin):
-            return 400, "Data de check-in inválida"
-        reservas[id_reserva]["data_checkin"] = data_checkin
-
-    if data_checkout is not None:
-        if not validar_data(data_checkout):
-            return 400, "Data de check-out inválida"
-        reservas[id_reserva]["data_checkout"] = data_checkout
-
-    if lista_quartos is not None:
-        for q in lista_quartos:
-            if q not in quartos:
-                return 404, f"Quarto {q} não encontrado"
-        reservas[id_reserva]["lista_quartos"] = lista_quartos
-
-    if valor_total is not None:
-        reservas[id_reserva]["valor_total"] = valor_total
-
-    if status_reserva is not None:
-        reservas[id_reserva]["status_reserva"] = status_reserva
+    if id_hotel: reservas[rid]["id_hotel"] = id_hotel
+    if id_quarto: reservas[rid]["id_quarto"] = id_quarto
+    if checkin: reservas[rid]["checkin"] = checkin
+    if checkout: reservas[rid]["checkout"] = checkout
+    if extras is not None: reservas[rid]["extras"] = extras
+    if valor is not None: reservas[rid]["valor"] = valor
+    if status: reservas[rid]["status"] = status
 
     guardar_dados("reservas.json", reservas)
+    return 200, rid
 
-    return 200, id_reserva
 
+def remover_reserva(rid):
+    if rid not in reservas:
+        return 404, "não encontrado"
 
-# DELETE
-def remover_reserva(id_reserva):
-
-    if id_reserva not in reservas:
-        return 404, "Reserva não encontrada"
-
-    reservas.pop(id_reserva)
-
+    r = reservas.pop(rid)
     guardar_dados("reservas.json", reservas)
+    return 200, r
 
-    return 200, id_reserva
+
+
 
 
 
