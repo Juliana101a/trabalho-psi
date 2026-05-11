@@ -1,101 +1,87 @@
-# ==============================
-# pagamento.py
-# CRUD para controle financeiro
-# ==============================
 
-from utils import gerar_id_pagamento, obter_data_hora_atual
-from reserva import reservas
 from persistencia import guardar_dados
+from reserva import reservas
+from utils import agora
 
 pagamentos = {}
+contador = 1
 
-# --- CREATE ---
-def registrar_pagamento(id_reserva, valor_pago, metodo_pagamento, status_pagamento):
 
+def gerar_id():
+    global contador
+    pid = f"P{contador:03d}"
+    contador += 1
+    return pid
+
+
+def criar_pagamento(id_reserva, valor, metodo, status):
     if id_reserva not in reservas:
-        return 404, "Erro: A reserva informada não existe."
+        return 404, "reserva não existe"
 
-    if valor_pago <= 0:
-        return 400, "Erro: O valor do pagamento deve ser superior a zero."
+    pid = gerar_id()
 
-    id_pagamento = gerar_id_pagamento()
-    data_hora = obter_data_hora_atual()
-
-    pagamentos[id_pagamento] = {
+    pagamentos[pid] = {
         "id_reserva": id_reserva,
-        "data_pagamento": data_hora,
-        "valor_pago": valor_pago,
-        "metodo_pagamento": metodo_pagamento,
-        "status_pagamento": status_pagamento
+        "valor": valor,
+        "metodo": metodo,
+        "status": status,
+        "data": agora()
     }
 
-    if status_pagamento.lower() == "confirmado":
-        reservas[id_reserva]["status_reserva"] = "Paga"
-
-    print(f"[LOG] Pagamento {id_pagamento} registado com sucesso.")
-
     guardar_dados("pagamentos.json", pagamentos)
+    return 201, pid
 
-    return 201, id_pagamento
 
-
-# --- READ (LISTAR) ---
 def listar_pagamentos():
-
-    if not pagamentos:
-        return 200, []
-
-    lista_formatada = [
-        {"id_pagamento": id_p, **dados}
-        for id_p, dados in pagamentos.items()
-    ]
-
-    return 200, lista_formatada
+    return 200, [{"id": k, **v} for k, v in pagamentos.items()]
 
 
-# --- READ (CONSULTAR UM) ---
-def consultar_pagamento(id_pagamento):
-
-    if id_pagamento not in pagamentos:
-        return 404, "Erro: Pagamento não encontrado."
-
-    return 200, pagamentos[id_pagamento]
+def consultar_pagamento(pid):
+    if pid not in pagamentos:
+        return 404, "não encontrado"
+    return 200, pagamentos[pid]
 
 
-# --- UPDATE ---
-def atualizar_pagamento(id_pagamento, valor_pago=None, metodo_pagamento=None, status_pagamento=None):
+def atualizar_pagamento(pid, id_reserva=None, valor=None, metodo=None, status=None):
+    if pid not in pagamentos:
+        return 404, "não encontrado"
 
-    if id_pagamento not in pagamentos:
-        return 404, "Erro: Pagamento não encontrado."
-
-    if valor_pago is not None:
-        if valor_pago <= 0:
-            return 400, "Erro: O valor deve ser superior a zero."
-        pagamentos[id_pagamento]["valor_pago"] = valor_pago
-
-    if metodo_pagamento is not None:
-        pagamentos[id_pagamento]["metodo_pagamento"] = metodo_pagamento
-
-    if status_pagamento is not None:
-        pagamentos[id_pagamento]["status_pagamento"] = status_pagamento
-
-        if status_pagamento.lower() == "confirmado":
-            res_id = pagamentos[id_pagamento]["id_reserva"]
-            if res_id in reservas:
-                reservas[res_id]["status_reserva"] = "Paga"
-
-    print(f"[LOG] Pagamento {id_pagamento} atualizado.")
+    if id_reserva: pagamentos[pid]["id_reserva"] = id_reserva
+    if valor is not None: pagamentos[pid]["valor"] = valor
+    if metodo: pagamentos[pid]["metodo"] = metodo
+    if status: pagamentos[pid]["status"] = status
 
     guardar_dados("pagamentos.json", pagamentos)
+    return 200, pid
 
-    return 200, id_pagamento
+
+def remover_pagamento(pid):
+    if pid not in pagamentos:
+        return 404, "não encontrado"
+
+    r = pagamentos.pop(pid)
+    guardar_dados("pagamentos.json", pagamentos)
+    return 200, r
 
 
-# --- DELETE ---
-def remover_pagamento(id_pagamento):
 
-    if id_pagamento not in pagamentos:
-        return 404, "Erro: Impossível remover registro inexistente."
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
