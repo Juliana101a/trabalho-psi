@@ -1,8 +1,7 @@
 
-from persistencia import guardar_dados
-from hotel import hoteis
+from persistencia import guardar_dados, carregar_dados
 
-quartos = {}
+quartos = carregar_dados("quartos.json")
 contador = 1
 
 
@@ -14,9 +13,6 @@ def gerar_id():
 
 
 def criar_quarto(id_hotel, numero, descricao, tipo, preco, lotacao):
-    if id_hotel not in hoteis:
-        return 404, "hotel não existe"
-
     qid = gerar_id()
     quartos[qid] = {
         "id_hotel": id_hotel,
@@ -44,15 +40,21 @@ def atualizar_quarto(qid, id_hotel=None, numero=None, descricao=None, tipo=None,
     if qid not in quartos:
         return 404, "não encontrado"
 
-    if id_hotel: quartos[qid]["id_hotel"] = id_hotel
-    if numero: quartos[qid]["numero"] = numero
-    if descricao: quartos[qid]["descricao"] = descricao
-    if tipo: quartos[qid]["tipo"] = tipo
-    if preco is not None: quartos[qid]["preco"] = preco
-    if lotacao is not None: quartos[qid]["lotacao"] = lotacao
+    if id_hotel is not None:
+        quartos[qid]["id_hotel"] = id_hotel
+    if numero is not None:
+        quartos[qid]["numero"] = numero
+    if descricao is not None:
+        quartos[qid]["descricao"] = descricao
+    if tipo is not None:
+        quartos[qid]["tipo"] = tipo
+    if preco is not None:
+        quartos[qid]["preco"] = preco
+    if lotacao is not None:
+        quartos[qid]["lotacao"] = lotacao
 
     guardar_dados("quartos.json", quartos)
-    return 200, qid
+    return 200, {"id": qid, **quartos[qid]}
 
 
 def remover_quarto(qid):
@@ -62,6 +64,20 @@ def remover_quarto(qid):
     r = quartos.pop(qid)
     guardar_dados("quartos.json", quartos)
     return 200, r
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
