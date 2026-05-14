@@ -1,7 +1,7 @@
 
-from persistencia import guardar_dados
+from persistencia import guardar_dados, carregar_dados
 
-clientes = {}
+clientes = carregar_dados("clientes.json") or {}
 contador = 1
 
 
@@ -56,8 +56,6 @@ def remover_cliente(cid):
     r = clientes.pop(cid)
     guardar_dados("clientes.json", clientes)
     return 200, r
-
-
 
 
 
