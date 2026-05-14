@@ -1,45 +1,35 @@
 
-from persistencia import carregar_dados
 
 from cliente import (
     criar_cliente, listar_clientes, consultar_cliente,
-    atualizar_cliente, remover_cliente, clientes
+    atualizar_cliente, remover_cliente
 )
 
 from hotel import (
     criar_hotel, listar_hoteis, consultar_hotel,
-    atualizar_hotel, remover_hotel, hoteis
+    atualizar_hotel, remover_hotel
 )
 
 from quarto import (
     criar_quarto, listar_quartos, consultar_quarto,
-    atualizar_quarto, remover_quarto, quartos
+    atualizar_quarto, remover_quarto
 )
 
 from reserva import (
     criar_reserva, listar_reservas, consultar_reserva,
-    atualizar_reserva, remover_reserva, reservas
+    atualizar_reserva, remover_reserva
 )
 
 from pagamento import (
     criar_pagamento, listar_pagamentos, consultar_pagamento,
-    atualizar_pagamento, remover_pagamento, pagamentos
+    atualizar_pagamento, remover_pagamento
 )
 
 from utils import converter_float, converter_int
 
 
-# ------------------ CARREGAMENTO ------------------
-clientes.update(carregar_dados("clientes.json"))
-hoteis.update(carregar_dados("hoteis.json"))
-quartos.update(carregar_dados("quartos.json"))
-reservas.update(carregar_dados("reservas.json"))
-pagamentos.update(carregar_dados("pagamentos.json"))
-
-
 # ------------------ MENU ------------------
 def exibir_menu():
-
     print("\n" + "=" * 60)
     print("        SISTEMA DE GESTÃO HOTELEIRA")
     print("=" * 60)
@@ -70,7 +60,6 @@ def main():
         exibir_menu()
         op = input("Escolha: ")
 
-        # CLIENTE
         if op == "1":
             print(criar_cliente(
                 input("Nome: "),
@@ -99,7 +88,6 @@ def main():
         elif op == "5":
             print(remover_cliente(input("ID Cliente: ")))
 
-        # HOTEL
         elif op == "6":
             print(criar_hotel(
                 input("Nome: "),
@@ -126,7 +114,6 @@ def main():
         elif op == "10":
             print(remover_hotel(input("ID Hotel: ")))
 
-        # QUARTO
         elif op == "11":
             print(criar_quarto(
                 input("ID Hotel: "),
@@ -157,7 +144,6 @@ def main():
         elif op == "15":
             print(remover_quarto(input("ID Quarto: ")))
 
-        # RESERVA
         elif op == "16":
             print(criar_reserva(
                 input("ID Hotel: "),
@@ -190,7 +176,6 @@ def main():
         elif op == "20":
             print(remover_reserva(input("ID Reserva: ")))
 
-        # PAGAMENTO
         elif op == "21":
             print(criar_pagamento(
                 input("ID Reserva: "),
@@ -227,8 +212,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
 
 
 
