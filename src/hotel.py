@@ -56,3 +56,11 @@ def remover_hotel(hid):
     return 200, r
 
 
+
+
+
+
+
+
+
+
