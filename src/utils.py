@@ -4,11 +4,16 @@ import persistencia
 
 
 # ------------------ CONTADORES ------------------
-persistencia.contador_cliente = 1
-persistencia.contador_hotel = 1
-persistencia.contador_quarto = 1
-persistencia.contador_reserva = 1
-persistencia.contador_pagamento = 1
+if not hasattr(persistencia, "contador_cliente"):
+    persistencia.contador_cliente = 1
+if not hasattr(persistencia, "contador_hotel"):
+    persistencia.contador_hotel = 1
+if not hasattr(persistencia, "contador_quarto"):
+    persistencia.contador_quarto = 1
+if not hasattr(persistencia, "contador_reserva"):
+    persistencia.contador_reserva = 1
+if not hasattr(persistencia, "contador_pagamento"):
+    persistencia.contador_pagamento = 1
 
 
 # ------------------ IDS ------------------
@@ -47,7 +52,7 @@ def validar_data(data):
     try:
         datetime.strptime(data, "%Y-%m-%d")
         return True
-    except:
+    except ValueError:
         return False
 
 
@@ -56,7 +61,7 @@ def validar_datas_reserva(checkin, checkout):
         dt1 = datetime.strptime(checkin, "%Y-%m-%d")
         dt2 = datetime.strptime(checkout, "%Y-%m-%d")
         return dt2 > dt1
-    except:
+    except ValueError:
         return False
 
 
@@ -64,14 +69,14 @@ def validar_datas_reserva(checkin, checkout):
 def converter_float(v):
     try:
         return float(v)
-    except:
+    except ValueError:
         return 0.0
 
 
 def converter_int(v):
     try:
         return int(v)
-    except:
+    except ValueError:
         return 0
 
 
@@ -84,19 +89,16 @@ def agora():
 def atualizar_contadores(clientes, quartos, reservas, pagamentos):
 
     if clientes:
-        persistencia.contador_cliente = max(int(i[1:]) for i in clientes) + 1
+        persistencia.contador_cliente = max(int(str(i)[1:]) for i in clientes) + 1
 
     if quartos:
-        persistencia.contador_quarto = max(int(i[1:]) for i in quartos) + 1
+        persistencia.contador_quarto = max(int(str(i)[1:]) for i in quartos) + 1
 
     if reservas:
-        persistencia.contador_reserva = max(int(i[1:]) for i in reservas) + 1
+        persistencia.contador_reserva = max(int(str(i)[1:]) for i in reservas) + 1
 
     if pagamentos:
-        persistencia.contador_pagamento = max(int(i[1:]) for i in pagamentos) + 1
-
-
-
+        persistencia.contador_pagamento = max(int(str(i)[1:]) for i in pagamentos) + 1
 
 
 
