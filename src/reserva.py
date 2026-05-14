@@ -1,10 +1,8 @@
 
-from persistencia import guardar_dados
-from quarto import quartos
-from hotel import hoteis
-from utils import validar_data
+from persistencia import guardar_dados, carregar_dados
+from utils import validar_datas_reserva, validar_data
 
-reservas = {}
+reservas = carregar_dados("reservas.json")
 contador = 1
 
 
@@ -16,17 +14,11 @@ def gerar_id():
 
 
 def criar_reserva(id_hotel, id_quarto, checkin, checkout, extras, valor, status):
-    if id_hotel not in hoteis:
-        return 404, "hotel não existe"
-
-    if id_quarto not in quartos:
-        return 404, "quarto não existe"
-
     if not validar_data(checkin) or not validar_data(checkout):
         return 400, "data inválida"
 
-    if checkin > checkout:
-        return 400, "checkin maior que checkout"
+    if not validar_datas_reserva(checkin, checkout):
+        return 400, "intervalo inválido"
 
     rid = gerar_id()
 
@@ -58,13 +50,20 @@ def atualizar_reserva(rid, id_hotel=None, id_quarto=None, checkin=None, checkout
     if rid not in reservas:
         return 404, "não encontrado"
 
-    if id_hotel: reservas[rid]["id_hotel"] = id_hotel
-    if id_quarto: reservas[rid]["id_quarto"] = id_quarto
-    if checkin: reservas[rid]["checkin"] = checkin
-    if checkout: reservas[rid]["checkout"] = checkout
-    if extras is not None: reservas[rid]["extras"] = extras
-    if valor is not None: reservas[rid]["valor"] = valor
-    if status: reservas[rid]["status"] = status
+    if id_hotel is not None:
+        reservas[rid]["id_hotel"] = id_hotel
+    if id_quarto is not None:
+        reservas[rid]["id_quarto"] = id_quarto
+    if checkin is not None:
+        reservas[rid]["checkin"] = checkin
+    if checkout is not None:
+        reservas[rid]["checkout"] = checkout
+    if extras is not None:
+        reservas[rid]["extras"] = extras
+    if valor is not None:
+        reservas[rid]["valor"] = valor
+    if status is not None:
+        reservas[rid]["status"] = status
 
     guardar_dados("reservas.json", reservas)
     return 200, {"id": rid, **reservas[rid]}
@@ -77,6 +76,13 @@ def remover_reserva(rid):
     r = reservas.pop(rid)
     guardar_dados("reservas.json", reservas)
     return 200, r
+
+
+
+
+
+
+
 
 
 
