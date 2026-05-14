@@ -1,3 +1,4 @@
+
 import json
 import os
 
@@ -11,7 +12,10 @@ def carregar_dados(ficheiro):
     if not os.path.exists(ficheiro):
         return {}
 
-    with open(ficheiro, "r", encoding="utf-8") as f:
-        conteudo = f.read().strip()
-        return json.loads(conteudo) if conteudo else {}
+    try:
+        with open(ficheiro, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return {}
+
 
