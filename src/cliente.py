@@ -1,7 +1,7 @@
 
 from persistencia import guardar_dados, carregar_dados
 
-clientes = carregar_dados("clientes.json") or {}
+clientes = carregar_dados("clientes.json")
 contador = 1
 
 
@@ -39,11 +39,16 @@ def atualizar_cliente(cid, nome=None, nif=None, telefone=None, email=None, data=
     if cid not in clientes:
         return 404, "não encontrado"
 
-    if nome: clientes[cid]["nome"] = nome
-    if nif: clientes[cid]["nif"] = nif
-    if telefone: clientes[cid]["telefone"] = telefone
-    if email: clientes[cid]["email"] = email
-    if data: clientes[cid]["data"] = data
+    if nome is not None:
+        clientes[cid]["nome"] = nome
+    if nif is not None:
+        clientes[cid]["nif"] = nif
+    if telefone is not None:
+        clientes[cid]["telefone"] = telefone
+    if email is not None:
+        clientes[cid]["email"] = email
+    if data is not None:
+        clientes[cid]["data"] = data
 
     guardar_dados("clientes.json", clientes)
     return 200, cid
@@ -56,6 +61,4 @@ def remover_cliente(cid):
     r = clientes.pop(cid)
     guardar_dados("clientes.json", clientes)
     return 200, r
-
-
 
