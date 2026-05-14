@@ -15,7 +15,7 @@ def gerar_id():
 
 
 def criar_pagamento(id_reserva, valor, metodo, status):
-    if id_reserva not in reservas:
+    if not reservas or id_reserva not in reservas:
         return 404, "reserva não existe"
 
     pid = gerar_id()
@@ -39,7 +39,7 @@ def listar_pagamentos():
 def consultar_pagamento(pid):
     if pid not in pagamentos:
         return 404, "não encontrado"
-    return 200, pagamentos[pid]
+    return 200, {"id": pid, **pagamentos[pid]}
 
 
 def atualizar_pagamento(pid, id_reserva=None, valor=None, metodo=None, status=None):
@@ -52,7 +52,7 @@ def atualizar_pagamento(pid, id_reserva=None, valor=None, metodo=None, status=No
     if status: pagamentos[pid]["status"] = status
 
     guardar_dados("pagamentos.json", pagamentos)
-    return 200, pid
+    return 200, {"id": pid, **pagamentos[pid]}
 
 
 def remover_pagamento(pid):
@@ -61,7 +61,12 @@ def remover_pagamento(pid):
 
     r = pagamentos.pop(pid)
     guardar_dados("pagamentos.json", pagamentos)
-    return 200, r
+    return 200, {"removido": r}
+
+
+
+
+
 
 
 
