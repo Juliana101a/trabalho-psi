@@ -57,4 +57,12 @@ def remover_hotel(hid):
 
     r = hoteis.pop(hid)
     guardar_dados("hoteis.json", hoteis)
-    return 200, 
+    return 200, r
+
+
+
+
+
+
+
+
