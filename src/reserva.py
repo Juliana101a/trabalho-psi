@@ -2,7 +2,6 @@
 from persistencia import guardar_dados, carregar_dados
 from utils import validar_datas_reserva, validar_data
 
-reservas = carregar_dados("reservas.json")
 contador = 1
 
 
@@ -14,6 +13,7 @@ def gerar_id():
 
 
 def criar_reserva(id_hotel, id_quarto, checkin, checkout, extras, valor, status):
+    reservas = carregar_dados("reservas.json")
     if not validar_data(checkin) or not validar_data(checkout):
         return 400, "data inválida"
 
@@ -37,16 +37,19 @@ def criar_reserva(id_hotel, id_quarto, checkin, checkout, extras, valor, status)
 
 
 def listar_reservas():
+    reservas = carregar_dados("reservas.json")
     return 200, [{"id": k, **v} for k, v in reservas.items()]
 
 
 def consultar_reserva(rid):
+    reservas = carregar_dados("reservas.json")
     if rid not in reservas:
         return 404, "não encontrado"
     return 200, {"id": rid, **reservas[rid]}
 
 
 def atualizar_reserva(rid, id_hotel=None, id_quarto=None, checkin=None, checkout=None, extras=None, valor=None, status=None):
+    reservas = carregar_dados("reservas.json")
     if rid not in reservas:
         return 404, "não encontrado"
 
@@ -70,12 +73,20 @@ def atualizar_reserva(rid, id_hotel=None, id_quarto=None, checkin=None, checkout
 
 
 def remover_reserva(rid):
+    reservas = carregar_dados("reservas.json")
     if rid not in reservas:
         return 404, "não encontrado"
 
     r = reservas.pop(rid)
     guardar_dados("reservas.json", reservas)
     return 200, r
+
+
+
+
+
+
+
 
 
 

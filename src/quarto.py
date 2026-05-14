@@ -1,9 +1,7 @@
 
 from persistencia import guardar_dados, carregar_dados
 
-quartos = carregar_dados("quartos.json")
 contador = 1
-
 
 def gerar_id():
     global contador
@@ -13,6 +11,7 @@ def gerar_id():
 
 
 def criar_quarto(id_hotel, numero, descricao, tipo, preco, lotacao):
+    quartos = carregar_dados("quartos.json")
     qid = gerar_id()
     quartos[qid] = {
         "id_hotel": id_hotel,
@@ -27,16 +26,19 @@ def criar_quarto(id_hotel, numero, descricao, tipo, preco, lotacao):
 
 
 def listar_quartos():
+    quartos = carregar_dados("quartos.json")
     return 200, [{"id": k, **v} for k, v in quartos.items()]
 
 
 def consultar_quarto(qid):
+    quartos = carregar_dados("quartos.json")
     if qid not in quartos:
         return 404, "não encontrado"
     return 200, {"id": qid, **quartos[qid]}
 
 
 def atualizar_quarto(qid, id_hotel=None, numero=None, descricao=None, tipo=None, preco=None, lotacao=None):
+    quartos = carregar_dados("quartos.json")
     if qid not in quartos:
         return 404, "não encontrado"
 
@@ -58,12 +60,65 @@ def atualizar_quarto(qid, id_hotel=None, numero=None, descricao=None, tipo=None,
 
 
 def remover_quarto(qid):
+    quartos = carregar_dados("quartos.json")
     if qid not in quartos:
         return 404, "não encontrado"
 
     r = quartos.pop(qid)
     guardar_dados("quartos.json", quartos)
     return 200, r
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

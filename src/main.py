@@ -1,5 +1,4 @@
 
-
 from cliente import (
     criar_cliente, listar_clientes, consultar_cliente,
     atualizar_cliente, remover_cliente
@@ -212,6 +211,83 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

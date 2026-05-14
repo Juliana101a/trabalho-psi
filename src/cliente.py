@@ -1,7 +1,7 @@
 
 from persistencia import guardar_dados, carregar_dados
 
-clientes = carregar_dados("clientes.json")
+
 contador = 1
 
 
@@ -13,6 +13,7 @@ def gerar_id():
 
 
 def criar_cliente(nome, nif, telefone, email, data):
+    clientes = carregar_dados("clientes.json")
     cid = gerar_id()
     clientes[cid] = {
         "nome": nome,
@@ -26,16 +27,19 @@ def criar_cliente(nome, nif, telefone, email, data):
 
 
 def listar_clientes():
+    clientes = carregar_dados("clientes.json")
     return 200, [{"id": k, **v} for k, v in clientes.items()]
 
 
 def consultar_cliente(cid):
+    clientes = carregar_dados("clientes.json")
     if cid not in clientes:
         return 404, "não encontrado"
     return 200, {"id": cid, **clientes[cid]}
 
 
 def atualizar_cliente(cid, nome=None, nif=None, telefone=None, email=None, data=None):
+    clientes = carregar_dados("clientes.json")
     if cid not in clientes:
         return 404, "não encontrado"
 
@@ -55,10 +59,10 @@ def atualizar_cliente(cid, nome=None, nif=None, telefone=None, email=None, data=
 
 
 def remover_cliente(cid):
+    clientes = carregar_dados("clientes.json")
     if cid not in clientes:
         return 404, "não encontrado"
 
     r = clientes.pop(cid)
     guardar_dados("clientes.json", clientes)
     return 200, r
-

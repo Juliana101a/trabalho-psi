@@ -1,7 +1,7 @@
 
+
 from persistencia import guardar_dados, carregar_dados
 
-hoteis = carregar_dados("hoteis.json")
 contador = 1
 
 
@@ -13,6 +13,7 @@ def gerar_id():
 
 
 def criar_hotel(nome, endereco, telefone, classificacao):
+    hoteis = carregar_dados("hoteis.json")
     hid = gerar_id()
     hoteis[hid] = {
         "nome": nome,
@@ -25,16 +26,19 @@ def criar_hotel(nome, endereco, telefone, classificacao):
 
 
 def listar_hoteis():
+    hoteis = carregar_dados("hoteis.json")
     return 200, [{"id": k, **v} for k, v in hoteis.items()]
 
 
 def consultar_hotel(hid):
+    hoteis = carregar_dados("hoteis.json")
     if hid not in hoteis:
         return 404, "não encontrado"
     return 200, {"id": hid, **hoteis[hid]}
 
 
 def atualizar_hotel(hid, nome=None, endereco=None, telefone=None, classificacao=None):
+    hoteis = carregar_dados("hoteis.json")
     if hid not in hoteis:
         return 404, "não encontrado"
 
@@ -52,12 +56,14 @@ def atualizar_hotel(hid, nome=None, endereco=None, telefone=None, classificacao=
 
 
 def remover_hotel(hid):
+    hoteis = carregar_dados("hoteis.json")
     if hid not in hoteis:
         return 404, "não encontrado"
 
     r = hoteis.pop(hid)
     guardar_dados("hoteis.json", hoteis)
     return 200, r
+
 
 
 

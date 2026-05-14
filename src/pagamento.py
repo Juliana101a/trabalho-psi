@@ -3,9 +3,7 @@
 from persistencia import guardar_dados, carregar_dados
 from utils import agora
 
-pagamentos = carregar_dados("pagamentos.json")
 contador = 1
-
 
 def gerar_id():
     global contador
@@ -15,6 +13,7 @@ def gerar_id():
 
 
 def criar_pagamento(id_reserva, valor, metodo, status):
+    pagamentos = carregar_dados("pagamentos.json")
     pid = gerar_id()
 
     pagamentos[pid] = {
@@ -30,16 +29,19 @@ def criar_pagamento(id_reserva, valor, metodo, status):
 
 
 def listar_pagamentos():
+    pagamentos = carregar_dados("pagamentos.json")
     return 200, [{"id": k, **v} for k, v in pagamentos.items()]
 
 
 def consultar_pagamento(pid):
+    pagamentos = carregar_dados("pagamentos.json")
     if pid not in pagamentos:
         return 404, "não encontrado"
     return 200, {"id": pid, **pagamentos[pid]}
 
 
 def atualizar_pagamento(pid, id_reserva=None, valor=None, metodo=None, status=None):
+    pagamentos = carregar_dados("pagamentos.json")
     if pid not in pagamentos:
         return 404, "não encontrado"
 
@@ -57,12 +59,66 @@ def atualizar_pagamento(pid, id_reserva=None, valor=None, metodo=None, status=No
 
 
 def remover_pagamento(pid):
+    pagamentos = carregar_dados("pagamentos.json")
     if pid not in pagamentos:
         return 404, "não encontrado"
 
     r = pagamentos.pop(pid)
     guardar_dados("pagamentos.json", pagamentos)
     return 200, {"removido": r}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
