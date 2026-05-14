@@ -1,9 +1,9 @@
 
-from persistencia import guardar_dados
-from reserva import reservas
+
+from persistencia import guardar_dados, carregar_dados
 from utils import agora
 
-pagamentos = {}
+pagamentos = carregar_dados("pagamentos.json")
 contador = 1
 
 
@@ -15,9 +15,6 @@ def gerar_id():
 
 
 def criar_pagamento(id_reserva, valor, metodo, status):
-    if not reservas or id_reserva not in reservas:
-        return 404, "reserva não existe"
-
     pid = gerar_id()
 
     pagamentos[pid] = {
@@ -46,10 +43,14 @@ def atualizar_pagamento(pid, id_reserva=None, valor=None, metodo=None, status=No
     if pid not in pagamentos:
         return 404, "não encontrado"
 
-    if id_reserva: pagamentos[pid]["id_reserva"] = id_reserva
-    if valor is not None: pagamentos[pid]["valor"] = valor
-    if metodo: pagamentos[pid]["metodo"] = metodo
-    if status: pagamentos[pid]["status"] = status
+    if id_reserva is not None:
+        pagamentos[pid]["id_reserva"] = id_reserva
+    if valor is not None:
+        pagamentos[pid]["valor"] = valor
+    if metodo is not None:
+        pagamentos[pid]["metodo"] = metodo
+    if status is not None:
+        pagamentos[pid]["status"] = status
 
     guardar_dados("pagamentos.json", pagamentos)
     return 200, {"id": pid, **pagamentos[pid]}
@@ -62,6 +63,12 @@ def remover_pagamento(pid):
     r = pagamentos.pop(pid)
     guardar_dados("pagamentos.json", pagamentos)
     return 200, {"removido": r}
+
+
+
+
+
+
 
 
 
