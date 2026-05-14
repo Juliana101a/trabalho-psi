@@ -1,49 +1,45 @@
 
 from datetime import datetime
-import persistencia
 
 
 # ------------------ CONTADORES ------------------
-if not hasattr(persistencia, "contador_cliente"):
-    persistencia.contador_cliente = 1
-if not hasattr(persistencia, "contador_hotel"):
-    persistencia.contador_hotel = 1
-if not hasattr(persistencia, "contador_quarto"):
-    persistencia.contador_quarto = 1
-if not hasattr(persistencia, "contador_reserva"):
-    persistencia.contador_reserva = 1
-if not hasattr(persistencia, "contador_pagamento"):
-    persistencia.contador_pagamento = 1
+contadores = {
+    "cliente": 1,
+    "hotel": 1,
+    "quarto": 1,
+    "reserva": 1,
+    "pagamento": 1
+}
 
 
 # ------------------ IDS ------------------
 def gerar_id_cliente():
-    cid = f"C{persistencia.contador_cliente:03d}"
-    persistencia.contador_cliente += 1
+    cid = f"C{contadores['cliente']:03d}"
+    contadores['cliente'] += 1
     return cid
 
 
 def gerar_id_hotel():
-    hid = f"H{persistencia.contador_hotel:03d}"
-    persistencia.contador_hotel += 1
+    hid = f"H{contadores['hotel']:03d}"
+    contadores['hotel'] += 1
     return hid
 
 
 def gerar_id_quarto():
-    qid = f"Q{persistencia.contador_quarto:03d}"
-    persistencia.contador_quarto += 1
+    qid = f"Q{contadores['quarto']:03d}"
+    contadores['quarto'] += 1
     return qid
 
 
 def gerar_id_reserva():
-    rid = f"R{persistencia.contador_reserva:03d}"
-    persistencia.contador_reserva += 1
+    rid = f"R{contadores['reserva']:03d}"
+    contadores['reserva'] += 1
     return rid
 
 
 def gerar_id_pagamento():
-    pid = f"P{persistencia.contador_pagamento:03d}"
-    persistencia.contador_pagamento += 1
+    pid = f"P{contadores['pagamento']:03d}"
+    contadores['pagamento'] += 1
     return pid
 
 
@@ -69,39 +65,17 @@ def validar_datas_reserva(checkin, checkout):
 def converter_float(v):
     try:
         return float(v)
-    except ValueError:
+    except (ValueError, TypeError):
         return 0.0
 
 
 def converter_int(v):
     try:
         return int(v)
-    except ValueError:
+    except (ValueError, TypeError):
         return 0
 
 
 # ------------------ DATA/HORA ------------------
 def agora():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-
-# ------------------ CONTADORES JSON ------------------
-def atualizar_contadores(clientes, quartos, reservas, pagamentos):
-
-    if clientes:
-        persistencia.contador_cliente = max(int(str(i)[1:]) for i in clientes) + 1
-
-    if quartos:
-        persistencia.contador_quarto = max(int(str(i)[1:]) for i in quartos) + 1
-
-    if reservas:
-        persistencia.contador_reserva = max(int(str(i)[1:]) for i in reservas) + 1
-
-    if pagamentos:
-        persistencia.contador_pagamento = max(int(str(i)[1:]) for i in pagamentos) + 1
-
-
-
-
-
-
