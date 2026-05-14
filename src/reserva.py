@@ -1,6 +1,7 @@
 
 from persistencia import guardar_dados
 from quarto import quartos
+from hotel import hoteis
 from utils import validar_data
 
 reservas = {}
@@ -15,11 +16,17 @@ def gerar_id():
 
 
 def criar_reserva(id_hotel, id_quarto, checkin, checkout, extras, valor, status):
+    if id_hotel not in hoteis:
+        return 404, "hotel não existe"
+
     if id_quarto not in quartos:
         return 404, "quarto não existe"
 
     if not validar_data(checkin) or not validar_data(checkout):
         return 400, "data inválida"
+
+    if checkin > checkout:
+        return 400, "checkin maior que checkout"
 
     rid = gerar_id()
 
@@ -60,7 +67,7 @@ def atualizar_reserva(rid, id_hotel=None, id_quarto=None, checkin=None, checkout
     if status: reservas[rid]["status"] = status
 
     guardar_dados("reservas.json", reservas)
-    return 200, rid
+    return 200, {"id": rid, **reservas[rid]}
 
 
 def remover_reserva(rid):
