@@ -1,102 +1,158 @@
-# ==============================
-# pagamento.py
-# CRUD para controle financeiro
-# ==============================
 
-from utils import gerar_id_pagamento, obter_data_hora_atual
-from reserva import reservas
 
-pagamentos = {}
+from persistencia import guardar_dados, carregar_dados
+from utils import agora
 
-# --- CREATE ---
-def registrar_pagamento(id_reserva, valor_pago, metodo_pagamento, status_pagamento):
+contador = 1
 
-    if id_reserva not in reservas:
-        return 404, "Erro: A reserva informada não existe."
+def gerar_id():
+    global contador
+    pid = f"P{contador:03d}"
+    contador += 1
+    return pid
 
-    if valor_pago <= 0:
-        return 400, "Erro: O valor do pagamento deve ser superior a zero."
 
-    id_pagamento = gerar_id_pagamento()
-    data_hora = obter_data_hora_atual()
+def criar_pagamento(id_reserva, valor, metodo, status):
+    pagamentos = carregar_dados("pagamentos.json")
+    pid = gerar_id()
 
-    pagamentos[id_pagamento] = {
+    pagamentos[pid] = {
         "id_reserva": id_reserva,
-        "data_pagamento": data_hora,
-        "valor_pago": valor_pago,
-        "metodo_pagamento": metodo_pagamento,
-        "status_pagamento": status_pagamento
+        "valor": valor,
+        "metodo": metodo,
+        "status": status,
+        "data": agora()
     }
 
-    if status_pagamento.lower() == "confirmado":
-        reservas[id_reserva]["status_reserva"] = "Paga"
-
-    print(f"[LOG] Pagamento {id_pagamento} registado com sucesso.")
-    return 201, id_pagamento
+    guardar_dados("pagamentos.json", pagamentos)
+    return 201, pid
 
 
-# --- READ (LISTAR) ---
 def listar_pagamentos():
-
-    if not pagamentos:
-        return 200, []
-
-    lista_formatada = [
-        {"id_pagamento": id_p, **dados}
-        for id_p, dados in pagamentos.items()
-    ]
-
-    return 200, lista_formatada
+    pagamentos = carregar_dados("pagamentos.json")
+    return 200, [{"id": k, **v} for k, v in pagamentos.items()]
 
 
-# --- READ (CONSULTAR UM) ---
-def consultar_pagamento(id_pagamento):
-
-    if id_pagamento not in pagamentos:
-        return 404, "Erro: Pagamento não encontrado."
-
-    return 200, pagamentos[id_pagamento]
+def consultar_pagamento(pid):
+    pagamentos = carregar_dados("pagamentos.json")
+    if pid not in pagamentos:
+        return 404, "não encontrado"
+    return 200, {"id": pid, **pagamentos[pid]}
 
 
-# --- UPDATE ---
-def atualizar_pagamento(id_pagamento, valor_pago=None, metodo_pagamento=None, status_pagamento=None):
+def atualizar_pagamento(pid, id_reserva=None, valor=None, metodo=None, status=None):
+    pagamentos = carregar_dados("pagamentos.json")
+    if pid not in pagamentos:
+        return 404, "não encontrado"
 
-    if id_pagamento not in pagamentos:
-        return 404, "Erro: Pagamento não encontrado."
+    if id_reserva is not None:
+        pagamentos[pid]["id_reserva"] = id_reserva
+    if valor is not None:
+        pagamentos[pid]["valor"] = valor
+    if metodo is not None:
+        pagamentos[pid]["metodo"] = metodo
+    if status is not None:
+        pagamentos[pid]["status"] = status
 
-    if valor_pago is not None:
-        if valor_pago <= 0:
-            return 400, "Erro: O valor deve ser superior a zero."
-        pagamentos[id_pagamento]["valor_pago"] = valor_pago
-
-    if metodo_pagamento is not None:
-        pagamentos[id_pagamento]["metodo_pagamento"] = metodo_pagamento
-
-    if status_pagamento is not None:
-        pagamentos[id_pagamento]["status_pagamento"] = status_pagamento
-
-        if status_pagamento.lower() == "confirmado":
-            res_id = pagamentos[id_pagamento]["id_reserva"]
-            if res_id in reservas:
-                reservas[res_id]["status_reserva"] = "Paga"
-
-    print(f"[LOG] Pagamento {id_pagamento} atualizado.")
-    return 200, id_pagamento
+    guardar_dados("pagamentos.json", pagamentos)
+    return 200, {"id": pid, **pagamentos[pid]}
 
 
-# --- DELETE ---
-def remover_pagamento(id_pagamento):
+def remover_pagamento(pid):
+    pagamentos = carregar_dados("pagamentos.json")
+    if pid not in pagamentos:
+        return 404, "não encontrado"
 
-    if id_pagamento not in pagamentos:
-        return 404, "Erro: Impossível remover registro inexistente."
+    r = pagamentos.pop(pid)
+    guardar_dados("pagamentos.json", pagamentos)
+    return 200, {"removido": r}
 
-    dados_removidos = pagamentos.pop(id_pagamento)
 
-    # segurança: só mexe na reserva se existir
-    id_reserva = dados_removidos["id_reserva"]
-    if id_reserva in reservas:
-        reservas[id_reserva]["status_reserva"] = "Pendente"
 
-    print(f"[LOG] Pagamento {id_pagamento} removido do sistema.")
 
-    return 200, id_pagamento
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

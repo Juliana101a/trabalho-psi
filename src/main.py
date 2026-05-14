@@ -1,213 +1,301 @@
+
 from cliente import (
     criar_cliente, listar_clientes, consultar_cliente,
     atualizar_cliente, remover_cliente
 )
+
 from hotel import (
     criar_hotel, listar_hoteis, consultar_hotel,
     atualizar_hotel, remover_hotel
 )
+
 from quarto import (
     criar_quarto, listar_quartos, consultar_quarto,
     atualizar_quarto, remover_quarto
 )
+
 from reserva import (
     criar_reserva, listar_reservas, consultar_reserva,
     atualizar_reserva, remover_reserva
 )
+
 from pagamento import (
-    registrar_pagamento, listar_pagamentos, consultar_pagamento,
+    criar_pagamento, listar_pagamentos, consultar_pagamento,
     atualizar_pagamento, remover_pagamento
 )
-from utils import converter_para_float, converter_para_int
+
+from utils import converter_float, converter_int
 
 
+# ------------------ MENU ------------------
 def exibir_menu():
     print("\n" + "=" * 60)
     print("        SISTEMA DE GESTÃO HOTELEIRA")
     print("=" * 60)
+
     print(" [1] Cliente - Criar        [6] Hotel - Criar        [11] Quarto - Criar")
     print(" [2] Cliente - Listar       [7] Hotel - Listar       [12] Quarto - Listar")
     print(" [3] Cliente - Consultar    [8] Hotel - Consultar    [13] Quarto - Consultar")
     print(" [4] Cliente - Atualizar    [9] Hotel - Atualizar    [14] Quarto - Atualizar")
     print(" [5] Cliente - Remover     [10] Hotel - Remover     [15] Quarto - Remover")
+
     print("-" * 60)
+
     print(" [16] Reserva - Criar      [21] Pagamento - Registar")
     print(" [17] Reserva - Listar     [22] Pagamento - Listar")
     print(" [18] Reserva - Consultar  [23] Pagamento - Consultar")
-    print(" [19] Reserva - Atualizar   [24] Pagamento - Atualizar")
-    print(" [20] Reserva - Remover     [25] Pagamento - Remover")
+    print(" [19] Reserva - Atualizar  [24] Pagamento - Atualizar")
+    print(" [20] Reserva - Remover    [25] Pagamento - Remover")
+
     print("-" * 60)
     print(" [0] Sair")
     print("=" * 60)
 
 
+# ------------------ MAIN ------------------
 def main():
+
     while True:
         exibir_menu()
-        opcao = input("Escolha uma opção: ")
+        op = input("Escolha: ")
 
-        # ---------------- CLIENTE ----------------
-        if opcao == "1":
-            status, res = criar_cliente(
+        if op == "1":
+            print(criar_cliente(
                 input("Nome: "),
                 input("NIF: "),
                 input("Telefone: "),
                 input("Email: "),
-                input("Data nascimento (YYYY-MM-DD): ")
-            )
-            print(status, res)
+                input("Data nascimento: ")
+            ))
 
-        elif opcao == "2":
-            status, lista = listar_clientes()
-            print(status)
-            for c in lista:
-                print(c)
+        elif op == "2":
+            print(listar_clientes())
 
-        elif opcao == "3":
-            status, res = consultar_cliente(input("ID Cliente: "))
-            print(status, res)
+        elif op == "3":
+            print(consultar_cliente(input("ID Cliente: ")))
 
-        elif opcao == "4":
-            status, res = atualizar_cliente(
+        elif op == "4":
+            print(atualizar_cliente(
                 input("ID Cliente: "),
-                input("Nome (ou Enter): ") or None,
-                input("NIF (ou Enter): ") or None,
-                input("Telefone (ou Enter): ") or None,
-                input("Email (ou Enter): ") or None,
-                input("Data nascimento (ou Enter): ") or None
-            )
-            print(status, res)
+                input("Nome: ") or None,
+                input("NIF: ") or None,
+                input("Telefone: ") or None,
+                input("Email: ") or None,
+                input("Data: ") or None
+            ))
 
-        elif opcao == "5":
-            status, res = remover_cliente(input("ID Cliente: "))
-            print(status, res)
+        elif op == "5":
+            print(remover_cliente(input("ID Cliente: ")))
 
-        # ---------------- HOTEL ----------------
-        elif opcao == "6":
-            status, res = criar_hotel(
+        elif op == "6":
+            print(criar_hotel(
                 input("Nome: "),
                 input("Endereço: "),
                 input("Telefone: "),
-                converter_para_int(input("Classificação: "))
-            )
-            print(status, res)
+                converter_int(input("Classificação: "))
+            ))
 
-        elif opcao == "7":
-            status, lista = listar_hoteis()
-            print(status)
-            for h in lista:
-                print(h)
+        elif op == "7":
+            print(listar_hoteis())
 
-        elif opcao == "8":
-            status, res = consultar_hotel(input("ID Hotel: "))
-            print(status, res)
+        elif op == "8":
+            print(consultar_hotel(input("ID Hotel: ")))
 
-        elif opcao == "9":
-            status, res = atualizar_hotel(input("ID Hotel: "))
-            print(status, res)
+        elif op == "9":
+            print(atualizar_hotel(
+                input("ID Hotel: "),
+                input("Nome: ") or None,
+                input("Endereço: ") or None,
+                input("Telefone: ") or None,
+                converter_int(input("Classificação: "))
+            ))
 
-        elif opcao == "10":
-            status, res = remover_hotel(input("ID Hotel: "))
-            print(status, res)
+        elif op == "10":
+            print(remover_hotel(input("ID Hotel: ")))
 
-        # ---------------- QUARTO ----------------
-        elif opcao == "11":
-            status, res = criar_quarto(
+        elif op == "11":
+            print(criar_quarto(
                 input("ID Hotel: "),
                 input("Número: "),
                 input("Descrição: "),
                 input("Tipo: "),
-                converter_para_float(input("Preço: ")),
-                converter_para_int(input("Lotação: "))
-            )
-            print(status, res)
+                converter_float(input("Preço: ")),
+                converter_int(input("Lotação: "))
+            ))
 
-        elif opcao == "12":
-            status, lista = listar_quartos()
-            print(status)
-            for q in lista:
-                print(q)
+        elif op == "12":
+            print(listar_quartos())
 
-        elif opcao == "13":
-            status, res = consultar_quarto(input("ID Quarto: "))
-            print(status, res)
+        elif op == "13":
+            print(consultar_quarto(input("ID Quarto: ")))
 
-        elif opcao == "14":
-            status, res = atualizar_quarto(input("ID Quarto: "))
-            print(status, res)
+        elif op == "14":
+            print(atualizar_quarto(
+                input("ID Quarto: "),
+                input("ID Hotel: ") or None,
+                input("Número: ") or None,
+                input("Descrição: ") or None,
+                input("Tipo: ") or None,
+                converter_float(input("Preço: ")),
+                converter_int(input("Lotação: "))
+            ))
 
-        elif opcao == "15":
-            status, res = remover_quarto(input("ID Quarto: "))
-            print(status, res)
+        elif op == "15":
+            print(remover_quarto(input("ID Quarto: ")))
 
-        # ---------------- RESERVA ----------------
-        elif opcao == "16":
-            status, res = criar_reserva(
+        elif op == "16":
+            print(criar_reserva(
                 input("ID Hotel: "),
                 input("ID Quarto: "),
                 input("Check-in: "),
                 input("Check-out: "),
-                input("Quartos extras (vírgula): ").split(","),
-                converter_para_float(input("Valor total: ")),
+                input("Extras: ").split(","),
+                converter_float(input("Valor: ")),
                 input("Status: ")
-            )
-            print(status, res)
+            ))
 
-        elif opcao == "17":
-            status, lista = listar_reservas()
-            print(status)
-            for r in lista:
-                print(r)
+        elif op == "17":
+            print(listar_reservas())
 
-        elif opcao == "18":
-            status, res = consultar_reserva(input("ID Reserva: "))
-            print(status, res)
+        elif op == "18":
+            print(consultar_reserva(input("ID Reserva: ")))
 
-        elif opcao == "19":
-            status, res = atualizar_reserva(input("ID Reserva: "))
-            print(status, res)
-
-        elif opcao == "20":
-            status, res = remover_reserva(input("ID Reserva: "))
-            print(status, res)
-
-        # ---------------- PAGAMENTO ----------------
-        elif opcao == "21":
-            status, res = registrar_pagamento(
+        elif op == "19":
+            print(atualizar_reserva(
                 input("ID Reserva: "),
-                converter_para_float(input("Valor: ")),
+                input("Hotel: ") or None,
+                input("Quarto: ") or None,
+                input("Check-in: ") or None,
+                input("Check-out: ") or None,
+                None,
+                converter_float(input("Valor: ")) if input("Atualizar valor? (s/n): ") == "s" else None,
+                input("Status: ") or None
+            ))
+
+        elif op == "20":
+            print(remover_reserva(input("ID Reserva: ")))
+
+        elif op == "21":
+            print(criar_pagamento(
+                input("ID Reserva: "),
+                converter_float(input("Valor: ")),
                 input("Método: "),
                 input("Status: ")
-            )
-            print(status, res)
+            ))
 
-        elif opcao == "22":
-            status, lista = listar_pagamentos()
-            print(status)
-            for p in lista:
-                print(p)
+        elif op == "22":
+            print(listar_pagamentos())
 
-        elif opcao == "23":
-            status, res = consultar_pagamento(input("ID Pagamento: "))
-            print(status, res)
+        elif op == "23":
+            print(consultar_pagamento(input("ID Pagamento: ")))
 
-        elif opcao == "24":
-            status, res = atualizar_pagamento(input("ID Pagamento: "))
-            print(status, res)
+        elif op == "24":
+            print(atualizar_pagamento(
+                input("ID Pagamento: "),
+                input("Reserva: ") or None,
+                converter_float(input("Valor: ")) if input("Atualizar valor? (s/n): ") == "s" else None,
+                input("Método: ") or None,
+                input("Status: ") or None
+            ))
 
-        elif opcao == "25":
-            status, res = remover_pagamento(input("ID Pagamento: "))
-            print(status, res)
+        elif op == "25":
+            print(remover_pagamento(input("ID Pagamento: ")))
 
-        # ---------------- SAIR ----------------
-        elif opcao == "0":
+        elif op == "0":
             print("A encerrar sistema...")
             break
 
         else:
-            print("Opção inválida")
+            print("Opção inválida!")
 
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

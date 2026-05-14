@@ -1,83 +1,150 @@
-# ==============================
-# quarto.py
-# CRUD simples para entidade Quarto
-# ==============================
 
-from utils import gerar_id_quarto
+from persistencia import guardar_dados, carregar_dados
 
-quartos = {}
+contador = 1
 
-# CREATE
-def criar_quarto(id_hotel, numero, descricao, tipo_quarto, preco, lotacao):
+def gerar_id():
+    global contador
+    qid = f"Q{contador:03d}"
+    contador += 1
+    return qid
 
-    id_quarto = gerar_id_quarto()
 
-    quartos[id_quarto] = {
+def criar_quarto(id_hotel, numero, descricao, tipo, preco, lotacao):
+    quartos = carregar_dados("quartos.json")
+    qid = gerar_id()
+    quartos[qid] = {
         "id_hotel": id_hotel,
         "numero": numero,
         "descricao": descricao,
-        "tipo_quarto": tipo_quarto,
+        "tipo": tipo,
         "preco": preco,
         "lotacao": lotacao
     }
+    guardar_dados("quartos.json", quartos)
+    return 201, qid
 
-    return 201, id_quarto
 
-
-# READ (listar todos)
 def listar_quartos():
-
-    if not quartos:
-        return 200, []
-
-    lista_formatada = [
-        {"id_quarto": id_q, **dados}
-        for id_q, dados in quartos.items()
-    ]
-
-    return 200, lista_formatada
+    quartos = carregar_dados("quartos.json")
+    return 200, [{"id": k, **v} for k, v in quartos.items()]
 
 
-# READ (consultar um)
-def consultar_quarto(id_quarto):
-
-    if id_quarto not in quartos:
-        return 404, "Quarto não encontrado."
-
-    return 200, quartos[id_quarto]
+def consultar_quarto(qid):
+    quartos = carregar_dados("quartos.json")
+    if qid not in quartos:
+        return 404, "não encontrado"
+    return 200, {"id": qid, **quartos[qid]}
 
 
-# UPDATE
-def atualizar_quarto(id_quarto, id_hotel=None, numero=None, descricao=None,
-                     tipo_quarto=None, preco=None, lotacao=None):
-
-    if id_quarto not in quartos:
-        return 404, "Quarto não encontrado."
+def atualizar_quarto(qid, id_hotel=None, numero=None, descricao=None, tipo=None, preco=None, lotacao=None):
+    quartos = carregar_dados("quartos.json")
+    if qid not in quartos:
+        return 404, "não encontrado"
 
     if id_hotel is not None:
-        quartos[id_quarto]["id_hotel"] = id_hotel
+        quartos[qid]["id_hotel"] = id_hotel
     if numero is not None:
-        quartos[id_quarto]["numero"] = numero
+        quartos[qid]["numero"] = numero
     if descricao is not None:
-        quartos[id_quarto]["descricao"] = descricao
-    if tipo_quarto is not None:
-        quartos[id_quarto]["tipo_quarto"] = tipo_quarto
+        quartos[qid]["descricao"] = descricao
+    if tipo is not None:
+        quartos[qid]["tipo"] = tipo
     if preco is not None:
-        quartos[id_quarto]["preco"] = preco
+        quartos[qid]["preco"] = preco
     if lotacao is not None:
-        quartos[id_quarto]["lotacao"] = lotacao
+        quartos[qid]["lotacao"] = lotacao
 
-    return 200, id_quarto
+    guardar_dados("quartos.json", quartos)
+    return 200, {"id": qid, **quartos[qid]}
 
 
-# DELETE
-def remover_quarto(id_quarto):
+def remover_quarto(qid):
+    quartos = carregar_dados("quartos.json")
+    if qid not in quartos:
+        return 404, "não encontrado"
 
-    if id_quarto not in quartos:
-        return 404, "Quarto não encontrado."
+    r = quartos.pop(qid)
+    guardar_dados("quartos.json", quartos)
+    return 200, r
 
-    quartos.pop(id_quarto)
 
-    return 200, id_quarto
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
