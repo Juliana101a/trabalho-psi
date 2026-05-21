@@ -1,4 +1,5 @@
 
+
 from persistencia import guardar_dados, carregar_dados
 from utils import gerar_id
 from logger import log_info, log_warning, log_error
@@ -42,14 +43,23 @@ def atualizar_cliente(cid, nome=None, nif=None, telefone=None, email=None, data=
     clientes = carregar_dados("clientes.json")
 
     if cid not in clientes:
-        log_error(f"Atualização falhou cliente: {cid}")
+        log_warning(f"Tentativa atualizar cliente inexistente: {cid}")
         return 404, "não encontrado"
 
-    if nome: clientes[cid]["nome"] = nome
-    if nif: clientes[cid]["nif"] = nif
-    if telefone: clientes[cid]["telefone"] = telefone
-    if email: clientes[cid]["email"] = email
-    if data: clientes[cid]["data"] = data
+    if nome:
+        clientes[cid]["nome"] = nome
+
+    if nif:
+        clientes[cid]["nif"] = nif
+
+    if telefone:
+        clientes[cid]["telefone"] = telefone
+
+    if email:
+        clientes[cid]["email"] = email
+
+    if data:
+        clientes[cid]["data"] = data
 
     guardar_dados("clientes.json", clientes)
     log_info(f"Cliente atualizado: {cid}")
