@@ -1,7 +1,8 @@
 
+
 from persistencia import guardar_dados, carregar_dados
 from utils import validar_data, validar_datas_reserva, gerar_id
-from logger import log_info, log_warning, log_error
+from logger import log_info, log_warning
 
 
 def criar_reserva(id_hotel, id_quarto, checkin, checkout, extras, valor, status):
@@ -10,23 +11,23 @@ def criar_reserva(id_hotel, id_quarto, checkin, checkout, extras, valor, status)
     quartos = carregar_dados("quartos.json")
 
     if id_hotel not in hoteis:
-        log_warning("Hotel inválido reserva")
+        log_warning(f"Hotel inválido reserva: {id_hotel}")
         return 404, "hotel não existe"
 
     if id_quarto not in quartos:
-        log_warning("Quarto inválido reserva")
+        log_warning(f"Quarto inválido reserva: {id_quarto}")
         return 404, "quarto não existe"
 
     if quartos[id_quarto]["id_hotel"] != id_hotel:
-        log_error("Quarto não pertence ao hotel")
+        log_warning(f"Inconsistência quarto/hotel: quarto {id_quarto} hotel {id_hotel}")
         return 400, "inconsistência"
 
     if not validar_data(checkin) or not validar_data(checkout):
-        log_error("Data inválida reserva")
+        log_warning("Data inválida reserva")
         return 400, "data inválida"
 
     if not validar_datas_reserva(checkin, checkout):
-        log_error("Intervalo inválido reserva")
+        log_warning("Intervalo inválido reserva")
         return 400, "intervalo inválido"
 
     rid = gerar_id("R", reservas)
@@ -67,16 +68,29 @@ def atualizar_reserva(rid, id_hotel=None, id_quarto=None, checkin=None, checkout
     reservas = carregar_dados("reservas.json")
 
     if rid not in reservas:
-        log_error(f"Atualização reserva falhou: {rid}")
+        log_warning(f"Tentativa atualizar reserva inexistente: {rid}")
         return 404, "não encontrado"
 
-    if id_hotel: reservas[rid]["id_hotel"] = id_hotel
-    if id_quarto: reservas[rid]["id_quarto"] = id_quarto
-    if checkin: reservas[rid]["checkin"] = checkin
-    if checkout: reservas[rid]["checkout"] = checkout
-    if extras is not None: reservas[rid]["extras"] = extras
-    if valor is not None: reservas[rid]["valor"] = valor
-    if status: reservas[rid]["status"] = status
+    if id_hotel:
+        reservas[rid]["id_hotel"] = id_hotel
+
+    if id_quarto:
+        reservas[rid]["id_quarto"] = id_quarto
+
+    if checkin:
+        reservas[rid]["checkin"] = checkin
+
+    if checkout:
+        reservas[rid]["checkout"] = checkout
+
+    if extras is not None:
+        reservas[rid]["extras"] = extras
+
+    if valor is not None:
+        reservas[rid]["valor"] = valor
+
+    if status:
+        reservas[rid]["status"] = status
 
     guardar_dados("reservas.json", reservas)
     log_info(f"Reserva atualizada: {rid}")
@@ -95,12 +109,6 @@ def remover_reserva(rid):
 
     log_info(f"Reserva removida: {rid}")
     return 200, r
-
-
-
-
-
-
 
 
 
