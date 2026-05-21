@@ -2,7 +2,7 @@
 
 from persistencia import guardar_dados, carregar_dados
 from utils import gerar_id
-from logger import log_info, log_warning, log_error
+from logger import log_info, log_warning
 
 
 def criar_quarto(id_hotel, numero, descricao, tipo, preco, lotacao):
@@ -10,7 +10,7 @@ def criar_quarto(id_hotel, numero, descricao, tipo, preco, lotacao):
     hoteis = carregar_dados("hoteis.json")
 
     if id_hotel not in hoteis:
-        log_warning("Hotel inválido ao criar quarto")
+        log_warning(f"Hotel inválido ao criar quarto: {id_hotel}")
         return 404, "hotel não existe"
 
     qid = gerar_id("Q", quartos)
@@ -50,15 +50,26 @@ def atualizar_quarto(qid, id_hotel=None, numero=None, descricao=None, tipo=None,
     quartos = carregar_dados("quartos.json")
 
     if qid not in quartos:
-        log_error(f"Atualização falhou quarto: {qid}")
+        log_warning(f"Tentativa atualizar quarto inexistente: {qid}")
         return 404, "não encontrado"
 
-    if id_hotel: quartos[qid]["id_hotel"] = id_hotel
-    if numero: quartos[qid]["numero"] = numero
-    if descricao: quartos[qid]["descricao"] = descricao
-    if tipo: quartos[qid]["tipo"] = tipo
-    if preco is not None: quartos[qid]["preco"] = preco
-    if lotacao is not None: quartos[qid]["lotacao"] = lotacao
+    if id_hotel:
+        quartos[qid]["id_hotel"] = id_hotel
+
+    if numero:
+        quartos[qid]["numero"] = numero
+
+    if descricao:
+        quartos[qid]["descricao"] = descricao
+
+    if tipo:
+        quartos[qid]["tipo"] = tipo
+
+    if preco is not None:
+        quartos[qid]["preco"] = preco
+
+    if lotacao is not None:
+        quartos[qid]["lotacao"] = lotacao
 
     guardar_dados("quartos.json", quartos)
     log_info(f"Quarto atualizado: {qid}")
@@ -77,11 +88,6 @@ def remover_quarto(qid):
 
     log_info(f"Quarto removido: {qid}")
     return 200, r
-
-
-
-
-
 
 
 
