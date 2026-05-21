@@ -1,7 +1,7 @@
 
 from persistencia import guardar_dados, carregar_dados
 from utils import gerar_id
-from logger import log_info, log_warning, log_error
+from logger import log_info, log_warning
 
 
 def criar_hotel(nome, endereco, telefone, classificacao):
@@ -41,13 +41,20 @@ def atualizar_hotel(hid, nome=None, endereco=None, telefone=None, classificacao=
     hoteis = carregar_dados("hoteis.json")
 
     if hid not in hoteis:
-        log_error(f"Atualização falhou hotel: {hid}")
+        log_warning(f"Tentativa atualizar hotel inexistente: {hid}")
         return 404, "não encontrado"
 
-    if nome: hoteis[hid]["nome"] = nome
-    if endereco: hoteis[hid]["endereco"] = endereco
-    if telefone: hoteis[hid]["telefone"] = telefone
-    if classificacao is not None: hoteis[hid]["classificacao"] = classificacao
+    if nome:
+        hoteis[hid]["nome"] = nome
+
+    if endereco:
+        hoteis[hid]["endereco"] = endereco
+
+    if telefone:
+        hoteis[hid]["telefone"] = telefone
+
+    if classificacao is not None:
+        hoteis[hid]["classificacao"] = classificacao
 
     guardar_dados("hoteis.json", hoteis)
     log_info(f"Hotel atualizado: {hid}")
