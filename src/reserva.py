@@ -1,26 +1,36 @@
 
+
 from persistencia import guardar_dados, carregar_dados
-from utils import validar_datas_reserva, validar_data
-
-contador = 1
-
-
-def gerar_id():
-    global contador
-    rid = f"R{contador:03d}"
-    contador += 1
-    return rid
+from utils import validar_data, validar_datas_reserva, gerar_id
+from logger import log_info, log_warning
 
 
 def criar_reserva(id_hotel, id_quarto, checkin, checkout, extras, valor, status):
     reservas = carregar_dados("reservas.json")
+    hoteis = carregar_dados("hoteis.json")
+    quartos = carregar_dados("quartos.json")
+
+    if id_hotel not in hoteis:
+        log_warning(f"Hotel inválido reserva: {id_hotel}")
+        return 404, "hotel não existe"
+
+    if id_quarto not in quartos:
+        log_warning(f"Quarto inválido reserva: {id_quarto}")
+        return 404, "quarto não existe"
+
+    if quartos[id_quarto]["id_hotel"] != id_hotel:
+        log_warning(f"Inconsistência quarto/hotel: quarto {id_quarto} hotel {id_hotel}")
+        return 400, "inconsistência"
+
     if not validar_data(checkin) or not validar_data(checkout):
+        log_warning("Data inválida reserva")
         return 400, "data inválida"
 
     if not validar_datas_reserva(checkin, checkout):
+        log_warning("Intervalo inválido reserva")
         return 400, "intervalo inválido"
 
-    rid = gerar_id()
+    rid = gerar_id("R", reservas)
 
     reservas[rid] = {
         "id_hotel": id_hotel,
@@ -33,56 +43,72 @@ def criar_reserva(id_hotel, id_quarto, checkin, checkout, extras, valor, status)
     }
 
     guardar_dados("reservas.json", reservas)
+    log_info(f"Reserva criada: {rid}")
     return 201, rid
 
 
 def listar_reservas():
     reservas = carregar_dados("reservas.json")
+    log_info("Listagem reservas")
     return 200, [{"id": k, **v} for k, v in reservas.items()]
 
 
 def consultar_reserva(rid):
     reservas = carregar_dados("reservas.json")
+
     if rid not in reservas:
+        log_warning(f"Reserva não encontrada: {rid}")
         return 404, "não encontrado"
+
+    log_info(f"Reserva consultada: {rid}")
     return 200, {"id": rid, **reservas[rid]}
 
 
 def atualizar_reserva(rid, id_hotel=None, id_quarto=None, checkin=None, checkout=None, extras=None, valor=None, status=None):
     reservas = carregar_dados("reservas.json")
+
     if rid not in reservas:
+        log_warning(f"Tentativa atualizar reserva inexistente: {rid}")
         return 404, "não encontrado"
 
-    if id_hotel is not None:
+    if id_hotel:
         reservas[rid]["id_hotel"] = id_hotel
-    if id_quarto is not None:
+
+    if id_quarto:
         reservas[rid]["id_quarto"] = id_quarto
-    if checkin is not None:
+
+    if checkin:
         reservas[rid]["checkin"] = checkin
-    if checkout is not None:
+
+    if checkout:
         reservas[rid]["checkout"] = checkout
+
     if extras is not None:
         reservas[rid]["extras"] = extras
+
     if valor is not None:
         reservas[rid]["valor"] = valor
-    if status is not None:
+
+    if status:
         reservas[rid]["status"] = status
 
     guardar_dados("reservas.json", reservas)
-    return 200, {"id": rid, **reservas[rid]}
+    log_info(f"Reserva atualizada: {rid}")
+    return 200, rid
 
 
 def remover_reserva(rid):
     reservas = carregar_dados("reservas.json")
+
     if rid not in reservas:
+        log_warning(f"Reserva inexistente: {rid}")
         return 404, "não encontrado"
 
     r = reservas.pop(rid)
     guardar_dados("reservas.json", reservas)
+
+    log_info(f"Reserva removida: {rid}")
     return 200, r
-
-
-
 
 
 
